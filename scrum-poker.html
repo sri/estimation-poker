@@ -29,7 +29,6 @@
       {{else}}
         <input type="text" name="username" placeholder="Enter name to Join Session..."/>
         <input type="submit" value="Join Session"/>
-        (you cannot vote until you enter your name)
       {{/if}}
     </div>
   </form>
@@ -37,24 +36,24 @@
 
 <template name="epics">
   {{#with openEpic}}
-    <div class="open-epic">
+    <div class="epic open-epic">
       {{> votes id=_id}}
-      <a href="" class="close">Close</a>
+      <a href="" class="close">x</a>
     </div>
   {{/with}}
 
   {{#each closedEpics}}
-    <div class="closed-epic">
+    <div class="epic closed-epic">
       {{> votes id=_id}}
     </div>
   {{/each}}
 </template>
 
 <template name="votes">
-  <ul>
-  {{#each votes id}}
-    <li>{{points}} - {{by}}</li>
-  {{/each}}
-  </ul>
-  Avg: {{avg id}}
+  <table>
+    {{#each votes id}}
+      <tr><td>{{by}}</td><td>{{points}}</td></tr>
+    {{/each}}
+    <tr><td><b>avg</b></td><td>{{avg id}}</td></tr>
+  </table>
 </template>
