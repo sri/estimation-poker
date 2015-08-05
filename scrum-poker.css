@@ -19,8 +19,10 @@
 
 .epic {
   width: 250px;
-  padding: 15px;
   margin: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 10px;
   border: 1px solid #ddd;
   margin-left: auto;
   margin-right: auto;
@@ -33,10 +35,24 @@
 
 .open-epic .close {
   position: absolute;
-  top: 5px;
-  right: 5px;
+  top: 0px;
+  right: 0px;
 }
 
 .closed-epic {
    background: #eee;
+}
+
+.epic .list-group-item:first-child {
+  margin-top: 12px;
+}
+
+.epic .list-group-item {
+  background: inherit;
+}
+
+.epic .badge {
+  background: inherit;
+  color: #000;
+  font-weight: normal;
 }

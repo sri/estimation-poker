@@ -62,17 +62,17 @@
 </template>
 
 <template name="votes">
-  <table class="centered">
+  <ul class="list-group">
     {{#each votes id}}
-      <tr>
-        <td>{{by}}</td>
-        <td class="text-right">{{points}}</td>
-      </tr>
+      <li class="list-group-item">
+        <span class="badge">{{points}}</span>
+        {{by}}
+      </li>
     {{/each}}
-    <tr>
-      <td><b>avg</b></td>
-      <td class="text-right">{{avg id}}</td>
-    </tr>
-  </table>
+    <li class="list-group-item">
+      <span class="badge">{{avg id}}</span>
+      Avg
+    </li>
+  </ul>
 </template>
 
