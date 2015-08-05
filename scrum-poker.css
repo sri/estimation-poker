@@ -1,0 +1,35 @@
+.point {
+  display: inline-block;
+  width: 60px;
+  height: 30px;
+  background: #666;;
+  -webkit-border-radius: 10px;
+  text-align: center;
+  vertical-align: middle;
+  color: #fff;
+}
+
+.user {
+  padding: 8px;
+  -webkit-border-radius: 10px;
+  border: 1px solid #ddd;
+  margin-bottom: 8px;
+}
+
+.user input[type="text"] {
+  width: 150px;
+}
+
+.open-epic {
+   -webkit-border-radius: 10px;
+   background: #77dd77;
+   border: 1px solid #ddd;
+   margin: 5px;
+}
+
+.closed-epic {
+   -webkit-border-radius: 10px;
+   background: #eee;
+   border: 1px solid #ddd;
+   margin: 5px;
+}

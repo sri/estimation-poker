@@ -1,0 +1,60 @@
+<head>
+  <title>scrum-poker</title>
+</head>
+
+<body>
+  <h1>Scrum Poker</h1>
+
+  {{> user}}
+  {{> points}}
+
+  {{> epics}}
+</body>
+
+<template name="points">
+  <div class="points">
+    <div class="point">2</div>
+    <div class="point">3</div>
+    <div class="point">5</div>
+    <div class="point">8</div>
+    <div class="point">13</div>
+  </div>
+</template>
+
+<template name="user">
+  <form>
+    <div class="user">
+      {{#if user}}
+        <b>{{user}}</b>
+      {{else}}
+        <input type="text" name="username" placeholder="Enter name to Join Session..."/>
+        <input type="submit" value="Join Session"/>
+        (you cannot vote until you enter your name)
+      {{/if}}
+    </div>
+  </form>
+</template>
+
+<template name="epics">
+  {{#with openEpic}}
+    <div class="open-epic">
+      {{> votes id=_id}}
+      <a href="" class="close">Close</a>
+    </div>
+  {{/with}}
+
+  {{#each closedEpics}}
+    <div class="closed-epic">
+      {{> votes id=_id}}
+    </div>
+  {{/each}}
+</template>
+
+<template name="votes">
+  <ul>
+  {{#each votes id}}
+    <li>{{points}} - {{by}}</li>
+  {{/each}}
+  </ul>
+  Avg: {{avg id}}
+</template>
