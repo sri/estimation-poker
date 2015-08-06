@@ -1,11 +1,52 @@
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #f5f5f5;
+}
+
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+.container {
+  width: auto;
+  max-width: 680px;
+  padding: 0 15px;
+}
+.container .text-muted {
+  margin: 20px 0;
+}
+
 .point {
   width: 60px;
   -webkit-border-radius: 10px;
   cursor: pointer;
 }
 
-.main {
-  text-align: center;
+.points {
+  margin: 0 auto;
+}
+
+.point-label {
+  font-weight: bold;
 }
 
 .centered {
@@ -18,14 +59,13 @@
 }
 
 .epic {
-  width: 250px;
-  margin: 5px;
+  margin-top: 5px;
   padding-left: 5px;
   padding-right: 5px;
   padding-top: 10px;
   border: 1px solid #ddd;
-  margin-left: auto;
-  margin-right: auto;
+/*  margin-left: auto;
+  margin-right: auto;*/
 }
 
 .open-epic {

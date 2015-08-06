@@ -1,63 +1,79 @@
 <head>
   <title>scrum-poker</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
 </head>
 
 <body>
-  <div class="row">
-    <div class="col-md-2">&nbsp;</div>
-    <div class="col-md-8 main">
-     {{> user}}
-     {{> points}}
+  <div class="container">
+   {{> user}}
+   {{> points}}
 
-     {{> epics}}
-    </div>
-    <div class="col-md-2">&nbsp;</div>
+   {{> epics}}
   </div>
-
+  <footer class="footer">
+    <div class="container">
+      <p class="text-muted">by <a href="https://twitter.com/s_thai">@s_thai</a></p>
+    </div>
+  </footer>
 </body>
 
 <template name="points">
-  <div class="btn-group points" role="group">
-    <button type="button" class="btn btn-default"><b>Points:</b></button>
-    <button type="button" class="btn btn-default point">2</button>
-    <button type="button" class="btn btn-default point">3</button>
-    <button type="button" class="btn btn-default point">5</button>
-    <button type="button" class="btn btn-default point">8</button>
-    <button type="button" class="btn btn-default point">13</button>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Points</h3>
+    </div>
+    <div class="panel-body">
+      <div class="btn-group points" role="group">
+        <button type="button" class="btn btn-default point">2</button>
+        <button type="button" class="btn btn-default point">3</button>
+        <button type="button" class="btn btn-default point">5</button>
+        <button type="button" class="btn btn-default point">8</button>
+        <button type="button" class="btn btn-default point">13</button>
+      </div>
+    </div>
   </div>
 </template>
 
 <template name="user">
-  <form>
-    <div class="user">
-      {{#if user}}
-        <b>{{user}}</b>
-      {{else}}
+  <div class="user">
+    {{#if user}}
+      <h2><span class="label label-info">{{user}}</span></h2>
+    {{else}}
+      <div class="page-header">
+        <h1>Scrum.poker()</h1>
+      </div>
+      <form>
         <div class="input-group">
-          <input type="text" class="form-control" name="username" placeholder="Username"/>
+          <input type="text" class="form-control" name="username" placeholder="Name"/>
           <span class="input-group-btn">
-            <button class="btn btn-default">join session</button>
+            <input type="submit" class="btn btn-default" value="Join Session">
           </span>
         </div>
-      {{/if}}
-    </div>
-  </form>
+      </form>
+    {{/if}}
+  </div>
 </template>
 
 <template name="epics">
-  {{#with openEpic}}
-    <div class="epic open-epic">
-      {{> votes id=_id}}
-      <button type="button" class="close" title="Close">&times;</button>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Epics</h3>
     </div>
-  {{/with}}
+    <div class="panel-body">
+      {{#with openEpic}}
+        <div class="epic open-epic">
+          {{> votes id=_id}}
+          <button type="button" class="close" title="Close">&times;</button>
+        </div>
+      {{/with}}
 
-  {{#each closedEpics}}
-    <div class="epic closed-epic">
-      {{> votes id=_id}}
+      {{#each closedEpics}}
+        <div class="epic closed-epic">
+          {{> votes id=_id}}
+        </div>
+      {{/each}}
     </div>
-  {{/each}}
+  </div>
 </template>
 
 <template name="votes">
@@ -68,10 +84,10 @@
         {{by}}
       </li>
     {{/each}}
-    <li class="list-group-item">
+   <!-- <li class="list-group-item">
       <span class="badge">{{avg id}}</span>
       Avg
-    </li>
+    </li> -->
   </ul>
 </template>
 

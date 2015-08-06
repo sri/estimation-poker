@@ -12,8 +12,10 @@ if (Meteor.isClient) {
 
   Template.user.events({
     'submit form': function(event, template) {
+      event.preventDefault();
       var username = event.target.username.value;
       Session.set("username", username);
+      $(".page-header").hide();
       return false;
     }
   });
