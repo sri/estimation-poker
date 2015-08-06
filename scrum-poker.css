@@ -42,7 +42,7 @@ body {
 }
 
 .points {
-  margin: 0 auto;
+  text-align: center;
 }
 
 .point-label {
@@ -63,24 +63,24 @@ body {
   padding-left: 5px;
   padding-right: 5px;
   padding-top: 10px;
-  border: 1px solid #ddd;
-/*  margin-left: auto;
-  margin-right: auto;*/
 }
 
 .open-epic {
-   background: #77dd77;
    position: relative;
 }
 
 .open-epic .close {
   position: absolute;
-  top: 0px;
-  right: 0px;
+  top: 8px;
+  right: 8px;
+}
+
+.create-epic {
+  float: right;
+  cursor: pointer;
 }
 
 .closed-epic {
-   background: #eee;
 }
 
 .epic .list-group-item:first-child {

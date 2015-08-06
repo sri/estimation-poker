@@ -13,7 +13,10 @@ if (Meteor.isClient) {
   Template.user.events({
     'submit form': function(event, template) {
       event.preventDefault();
-      var username = event.target.username.value;
+      var username = $.trim(event.target.username.value);
+      if (!username) {
+        return;
+      }
       Session.set("username", username);
       $(".page-header").hide();
       return false;

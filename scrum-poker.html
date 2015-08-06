@@ -22,13 +22,23 @@
     <div class="panel-heading">
       <h3 class="panel-title">Points</h3>
     </div>
-    <div class="panel-body">
-      <div class="btn-group points" role="group">
+    <div class="panel-body points">
+      <div class="btn-group" role="group">
         <button type="button" class="btn btn-default point">2</button>
         <button type="button" class="btn btn-default point">3</button>
         <button type="button" class="btn btn-default point">5</button>
         <button type="button" class="btn btn-default point">8</button>
         <button type="button" class="btn btn-default point">13</button>
+        <div class="btn-group" role="group">
+           <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+             More
+             <span class="caret"></span>
+           </button>
+           <ul class="dropdown-menu">
+             <li><a href="#">Back to Product</a></li>
+             <li><a href="#">&infin;</a></li>
+           </ul>
+         </div>
       </div>
     </div>
   </div>
@@ -37,7 +47,7 @@
 <template name="user">
   <div class="user">
     {{#if user}}
-      <h2><span class="label label-info">{{user}}</span></h2>
+      <h2><span class="label label-info">whoami: {{user}}</span></h2>
     {{else}}
       <div class="page-header">
         <h1>Scrum.poker()</h1>
@@ -46,7 +56,7 @@
         <div class="input-group">
           <input type="text" class="form-control" name="username" placeholder="Name"/>
           <span class="input-group-btn">
-            <input type="submit" class="btn btn-default" value="Join Session">
+            <input type="submit" class="btn btn-primary" value="Join Session">
           </span>
         </div>
       </form>
@@ -57,19 +67,34 @@
 <template name="epics">
   <div class="panel panel-default">
     <div class="panel-heading">
-      <h3 class="panel-title">Epics</h3>
+      <h3 class="panel-title">
+        Epics
+        <div class="create-epic">
+          <span class="glyphicon glyphicon-plus" title="Create new Epic"></span>
+        </div>
+      </h3>
     </div>
     <div class="panel-body">
       {{#with openEpic}}
         <div class="epic open-epic">
-          {{> votes id=_id}}
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4 class="panel-title">{{name}}</h4>
+            </div>
+            {{> votes id=_id}}
+          </div>
           <button type="button" class="close" title="Close">&times;</button>
         </div>
       {{/with}}
 
       {{#each closedEpics}}
         <div class="epic closed-epic">
-          {{> votes id=_id}}
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4 class="panel-title">{{name}}</h4>
+            </div>
+            {{> votes id=_id}}
+          </div>
         </div>
       {{/each}}
     </div>
