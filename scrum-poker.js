@@ -31,7 +31,7 @@ if (Meteor.isClient) {
     },
 
     'click .create-epic': function(event, template) {
-      var name = $.trim(prompt("Epic Name") || "");
+      var name = $.trim(prompt("Epic Name") || "").toUpperCase();
       if (!name) {
         return;
       }
