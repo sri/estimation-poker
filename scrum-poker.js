@@ -27,9 +27,41 @@ if (Meteor.isClient) {
     'click .close': function(event, template) {
       var current = Epics.findOne({current: true});
       Epics.update({_id: current._id}, {$set: {current: false}});
-      Epics.insert({current: true, createdAt: (new Date).valueOf()});
       return false;
+    },
+
+    'click .create-epic': function(event, template) {
+      var name = $.trim(prompt("Epic Name") || "");
+      if (!name) {
+        return;
+      }
+      var current = Epics.findOne({current: true});
+      if (current) {
+        Epics.update({_id: current._id}, {$set: {current: false}});
+      }
+      Epics.insert({current: true, name: name, createdAt: (new Date).valueOf()});
+    },
+
+    'click .point': function(event, template) {
+      var username = Session.get("username");
+      if (!username) {
+        alert("set user name");
+        return;
+      }
+      var points = parseInt(event.target.innerHTML);
+      var current = Epics.findOne({current: true});
+      if (!current) {
+        current = Epics.insert({current: true, createdAt: (new Date).valueOf()});
+      }
+      var currentVote = Votes.findOne({by: username, epic: current._id});
+      if (currentVote) {
+        Votes.update({_id: currentVote._id}, {$set: {points: points}});
+      } else {
+        console.log("done inserting")
+        Votes.insert({by: username, epic: current._id, points: points});
+      }
     }
+
   })
 
   Template.epics.helpers({
@@ -62,25 +94,6 @@ if (Meteor.isClient) {
   });
 
   Template.points.events({
-    'click .point': function(event, template) {
-      var username = Session.get("username");
-      if (!username) {
-        alert("set user name");
-        return;
-      }
-      var points = parseInt(event.target.innerHTML);
-      var current = Epics.findOne({current: true});
-      if (!current) {
-        current = Epics.insert({current: true, createdAt: (new Date).valueOf()});
-      }
-      var currentVote = Votes.findOne({by: username, epic: current._id});
-      if (currentVote) {
-        Votes.update({_id: currentVote._id}, {$set: {points: points}});
-      } else {
-        console.log("done inserting")
-        Votes.insert({by: username, epic: current._id, points: points});
-      }
-    }
   });
 }
 

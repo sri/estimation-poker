@@ -71,8 +71,8 @@ body {
 
 .open-epic .close {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 15px;
+  right: 15px;
 }
 
 .create-epic {

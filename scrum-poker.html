@@ -6,8 +6,6 @@
 <body>
   <div class="container">
    {{> user}}
-   {{> points}}
-
    {{> epics}}
   </div>
   <footer class="footer">
@@ -47,7 +45,7 @@
 <template name="user">
   <div class="user">
     {{#if user}}
-      <h2><span class="label label-info">whoami: {{user}}</span></h2>
+      <h2><span class="label label-info">{{user}}.i.am</span></h2>
     {{else}}
       <div class="page-header">
         <h1>Scrum.poker()</h1>
@@ -77,13 +75,32 @@
     <div class="panel-body">
       {{#with openEpic}}
         <div class="epic open-epic">
-          <div class="panel panel-default">
+          <div class="panel panel-success">
             <div class="panel-heading">
               <h4 class="panel-title">{{name}}</h4>
             </div>
+            <div class="panel-body points">
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default point">2</button>
+                <button type="button" class="btn btn-default point">3</button>
+                <button type="button" class="btn btn-default point">5</button>
+                <button type="button" class="btn btn-default point">8</button>
+                <button type="button" class="btn btn-default point">13</button>
+                <div class="btn-group" role="group">
+                   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                     More
+                     <span class="caret"></span>
+                   </button>
+                   <ul class="dropdown-menu">
+                     <li><a href="#">Back to Product</a></li>
+                     <li><a href="#">&infin;</a></li>
+                   </ul>
+                 </div>
+              </div>
+            </div>
             {{> votes id=_id}}
           </div>
-          <button type="button" class="close" title="Close">&times;</button>
+          <span class="glyphicon glyphicon-ok close" title="End Voting on this Epic"></span>
         </div>
       {{/with}}
 
