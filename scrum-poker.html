@@ -98,9 +98,15 @@
                  </div>
               </div>
             </div>
-            {{> votes id=_id}}
+            <ul class="list-group">
+              {{> votes id=_id closed="false"}}
+              <li class="list-group-item">
+                <button type="button" class="btn btn-default btn-lg btn-block show-votes">
+                  Show Votes
+                </button>
+              </li>
+            </ul>
           </div>
-          <span class="glyphicon glyphicon-ok close" title="End Voting on this Epic"></span>
         </div>
       {{/with}}
 
@@ -110,7 +116,9 @@
             <div class="panel-heading">
               <h4 class="panel-title">{{name}}</h4>
             </div>
-            {{> votes id=_id}}
+            <ul class="list-group">
+              {{> votes id=_id closed="true"}}
+            </ul>
           </div>
         </div>
       {{/each}}
@@ -119,17 +127,21 @@
 </template>
 
 <template name="votes">
-  <ul class="list-group">
-    {{#each votes id}}
-      <li class="list-group-item">
-        <span class="badge">{{points}}</span>
-        {{by}}
-      </li>
-    {{/each}}
-   <!-- <li class="list-group-item">
-      <span class="badge">{{avg id}}</span>
-      Avg
-    </li> -->
-  </ul>
+  {{#each votes id}}
+    <li class="list-group-item">
+      <span class="badge">
+        {{#if isClosed}}
+          {{points}}
+        {{else}}
+          ?
+        {{/if}}
+      </span>
+      {{by}}
+    </li>
+  {{/each}}
+ <!-- <li class="list-group-item">
+    <span class="badge">{{avg id}}</span>
+    Avg
+  </li> -->
 </template>
 

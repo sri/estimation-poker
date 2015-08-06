@@ -24,7 +24,7 @@ if (Meteor.isClient) {
   });
 
   Template.epics.events({
-    'click .close': function(event, template) {
+    'click .show-votes': function(event, template) {
       var current = Epics.findOne({current: true});
       Epics.update({_id: current._id}, {$set: {current: false}});
       return false;
@@ -77,6 +77,9 @@ if (Meteor.isClient) {
   Template.votes.helpers({
     votes: function(epicId) {
       return Votes.find({epic: epicId});
+    },
+    isClosed: function() {
+      return Template.parentData(1).closed === "true";
     },
     avg: function(epicId) {
       var total = 0,
