@@ -55,7 +55,6 @@ if (Meteor.isClient) {
     },
 
     'click .point, click .point2, click .dd-point': function(event, template) {
-      console.log(event.target);
       var username = Session.get("username");
       if (!username) {
         alert("set user name");
@@ -122,9 +121,6 @@ if (Meteor.isClient) {
     isClosed: function() {
       return Template.parentData(1).closed === "true";
     }
-  });
-
-  Template.points.events({
   });
 }
 
