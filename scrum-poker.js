@@ -54,7 +54,7 @@ if (Meteor.isClient) {
       return false;
     },
 
-    'click .point': function(event, template) {
+    'click .point, click .point2': function(event, template) {
       var username = Session.get("username");
       if (!username) {
         alert("set user name");
