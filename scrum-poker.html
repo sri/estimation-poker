@@ -18,14 +18,13 @@
 <template name="user">
   <div class="user">
     {{#if user}}
-      <h2><span class="label label-default">Name: {{user}}</span></h2>
     {{else}}
       <div class="page-header">
         <h1>Scrum.poker()</h1>
       </div>
       <form>
         <div class="input-group">
-          <input type="text" class="form-control" name="username" placeholder="Name"/>
+          <input type="text" class="form-control" name="username" id="username" placeholder="Your Name"/>
           <span class="input-group-btn">
             <input type="submit" class="btn btn-primary" value="Join Session">
           </span>
@@ -39,7 +38,15 @@
   <div class="panel panel-default">
     <div class="panel-heading">
       <h3 class="panel-title">
-        Epics
+        {{#if user}}
+          Voting on Epics as
+          <span class="label label-primary">
+            <span class="glyphicon glyphicon-user"></span>
+            {{user}}
+          </span>
+        {{else}}
+          Epics
+        {{/if}}
       </h3>
     </div>
     <div class="panel-body">

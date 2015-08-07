@@ -8,6 +8,14 @@ if (Meteor.isClient) {
     Session.set("username", localStorage["username"]);
   }
 
+  $(document).ready(function() {
+    if ($("#username").is(":visible")) {
+      $("#username").focus();
+    } else if ($("#epicname").is(":visible")) {
+      $("#epicname").focus();
+    }
+  });
+
   Template.user.helpers({
     user: function() {
       return Session.get("username");
@@ -38,6 +46,10 @@ if (Meteor.isClient) {
       }
       Epics.update({_id: current._id}, {$set: {current: false}});
       Epics.insert({current: true, createdAt: (new Date).valueOf(), name: ""});
+      var closedEpic = $($(".closed-epic").get(0));
+      closedEpic.addClass("newly-minted newly-minted-div");
+      closedEpic.focus();
+      closedEpic.removeClass("newly-minted-div");
       $("#epicname").focus();
       return false;
     },
@@ -83,6 +95,9 @@ if (Meteor.isClient) {
   });
 
   Template.epics.helpers({
+    user: function() {
+      return Session.get("username");
+    },
     hasName: function(name) {
       if (!name) return false;
       return true;
