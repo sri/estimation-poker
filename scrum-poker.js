@@ -30,11 +30,15 @@ if (Meteor.isClient) {
 
   Template.epics.events({
     'click .show-votes': function(event, template) {
+      // TODO(sri): what if two click on show-votes
+      // one right after another?
       var current = Epics.findOne({current: true});
       if (!Votes.findOne({epic: current._id})) {
         return false;
       }
       Epics.update({_id: current._id}, {$set: {current: false}});
+      Epics.insert({current: true, createdAt: (new Date).valueOf(), name: ""});
+      $("#epicname").focus();
       return false;
     },
 
@@ -56,7 +60,7 @@ if (Meteor.isClient) {
         alert("set user name");
         return;
       }
-      var points = parseInt(event.target.innerHTML);
+      var points = event.target.innerHTML;
       var current = Epics.findOne({current: true});
       if (!current) {
         alert("err");
@@ -68,6 +72,7 @@ if (Meteor.isClient) {
       } else {
         Votes.insert({by: username, epic: current._id, points: points});
       }
+      return false;
     }
   });
 
@@ -77,25 +82,15 @@ if (Meteor.isClient) {
       return true;
     },
     openEpic: function() {
-      var current = Epics.findOne({current: true});
-      if (current) {
-        return current;
-      }
-      Epics.insert({current: true, createdAt: (new Date).valueOf(), name: ""});
       return Epics.findOne({current: true});
+      // if (current) {
+      //   return current;
+      // }
+      // Epics.insert({current: true, createdAt: (new Date).valueOf(), name: ""});
+      // return Epics.findOne({current: true});
     },
-
     closedEpics: function() {
       return Epics.find({current: false}, {sort: {createdAt: -1}});
-    }
-  })
-
-  Template.votes.helpers({
-    votes: function(epicId) {
-      return Votes.find({epic: epicId});
-    },
-    isClosed: function() {
-      return Template.parentData(1).closed === "true";
     },
     avg: function(epicId) {
       var total = 0,
@@ -110,6 +105,16 @@ if (Meteor.isClient) {
       }
       return Math.ceil(total / count);
     }
+
+  })
+
+  Template.votes.helpers({
+    votes: function(epicId) {
+      return Votes.find({epic: epicId});
+    },
+    isClosed: function() {
+      return Template.parentData(1).closed === "true";
+    }
   });
 
   Template.points.events({
@@ -119,18 +124,23 @@ if (Meteor.isClient) {
 if (Meteor.isServer) {
   Meteor.startup(function () {
 
+   if (!Epics.findOne({current: true})) {
+      Epics.insert({
+        current: true,
+        createdAt: (new Date).valueOf(),
+        name: ""
+      });
+    }
+
     return Meteor.methods({
       // In console:
       // > Meteor.call("removeAll")
       removeAll: function() {
         Votes.remove({});
         Epics.remove({});
+        Epics.insert({current: true, createdAt: (new Date).valueOf(), name: ""});
       }
-    })
-    // if (!Epics.findOne({current: true})) {
-    //   Epics.insert({
-    //     current: true
-    //   })
-    // }
+    });
+
   });
 }

@@ -15,33 +15,6 @@
   </footer>
 </body>
 
-<template name="points">
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h3 class="panel-title">Points</h3>
-    </div>
-    <div class="panel-body points">
-      <div class="btn-group" role="group">
-        <button type="button" class="btn btn-default point" data-points="2">2</button>
-        <button type="button" class="btn btn-default point" data-points="3">3</button>
-        <button type="button" class="btn btn-default point" data-points="5">5</button>
-        <button type="button" class="btn btn-default point" data-points="8">8</button>
-        <button type="button" class="btn btn-default point" data-points="13">13</button>
-        <div class="btn-group" role="group">
-           <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-             More
-             <span class="caret"></span>
-           </button>
-           <ul class="dropdown-menu">
-             <li><a href="#" class="point" data-points="back-to-product">Back to Product</a></li>
-             <li><a href="#" class="point" data-points="infinity">&infin;</a></li>
-           </ul>
-         </div>
-      </div>
-    </div>
-  </div>
-</template>
-
 <template name="user">
   <div class="user">
     {{#if user}}
@@ -79,13 +52,26 @@
                   {{name}}
                 {{else}}
                   <form>
-                    <input type="text" class="form-control" name="epicname" placeholder="Epic name" />
+                    <input type="text" class="form-control" id="epicname" name="epicname" placeholder="Epic name" />
                   </form>
                 {{/if}}
               </h4>
             </div>
             <div class="panel-body points">
-              <div class="btn-group" role="group">
+              <div class="visible-xs-block">
+                <button type="button" class="btn btn-default btn-lg btn-block point2">2</button>
+                <button type="button" class="btn btn-default btn-lg btn-block point2">3</button>
+                <button type="button" class="btn btn-default btn-lg btn-block point2">5</button>
+                <button type="button" class="btn btn-default btn-lg btn-block point2">8</button>
+                <button type="button" class="btn btn-default btn-lg btn-block point2">13</button>
+                <button type="button" class="btn btn-default btn-lg btn-block point2">
+                  &infin;
+                </button>
+                <button type="button" class="btn btn-default btn-lg btn-block point2">
+                  Back to Product
+                </button>
+              </div>
+              <div class="btn-group hidden-xs" role="group">
                 <button type="button" class="btn btn-default point">2</button>
                 <button type="button" class="btn btn-default point">3</button>
                 <button type="button" class="btn btn-default point">5</button>
@@ -97,8 +83,8 @@
                      <span class="caret"></span>
                    </button>
                    <ul class="dropdown-menu">
-                     <li><a href="#">Back to Product</a></li>
                      <li><a href="#">&infin;</a></li>
+                     <li><a href="#">Back to Product</a></li>
                    </ul>
                  </div>
               </div>
@@ -123,6 +109,10 @@
             </div>
             <ul class="list-group">
               {{> votes id=_id closed="true"}}
+              <li class="list-group-item">
+                <span class="badge">{{avg id}}</span>
+                <b>Avg</b>
+              </li>
             </ul>
           </div>
         </div>
@@ -138,15 +128,11 @@
         {{#if isClosed}}
           {{points}}
         {{else}}
-          <span class="glyphicon glyphicon-question-sign"></span>
+          <span class="glyphicon glyphicon-question-sign question-sign"></span>
         {{/if}}
       </span>
       {{by}}
     </li>
   {{/each}}
- <!-- <li class="list-group-item">
-    <span class="badge">{{avg id}}</span>
-    Avg
-  </li> -->
 </template>
 
