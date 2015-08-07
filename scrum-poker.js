@@ -54,7 +54,8 @@ if (Meteor.isClient) {
       return false;
     },
 
-    'click .point, click .point2': function(event, template) {
+    'click .point, click .point2, click .dd-point': function(event, template) {
+      console.log(event.target);
       var username = Session.get("username");
       if (!username) {
         alert("set user name");
@@ -72,7 +73,13 @@ if (Meteor.isClient) {
       } else {
         Votes.insert({by: username, epic: current._id, points: points});
       }
-      return false;
+      // dd-points are points in the dropdown.
+      // If they return false, then
+      if ($(event.target).hasClass("dd-point")) {
+        event.preventDefault();
+      } else {
+        return false;
+      }
     }
   });
 
@@ -92,7 +99,7 @@ if (Meteor.isClient) {
     closedEpics: function() {
       return Epics.find({current: false}, {sort: {createdAt: -1}});
     },
-    avg: function(epicId) {
+    consensus: function(epicId) {
       var total = 0,
           count = 0;
 
