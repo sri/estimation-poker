@@ -39,7 +39,7 @@ body {
 
 }
 
-.newly-minted-div {
+.newly-minted-with-bg-color {
   background-color: gold;
 }
 
@@ -98,7 +98,7 @@ body {
 }
 
 .epic .badge {
-  background: inherit;
+  background: #fff;
   color: #000;
   font-weight: normal;
 }

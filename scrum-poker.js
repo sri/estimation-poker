@@ -46,10 +46,11 @@ if (Meteor.isClient) {
       }
       Epics.update({_id: current._id}, {$set: {current: false}});
       Epics.insert({current: true, createdAt: (new Date).valueOf(), name: ""});
-      var closedEpic = $($(".closed-epic").get(0));
-      closedEpic.addClass("newly-minted newly-minted-div");
+      var closedEpic = $( $(".closed-epic").get(0) );
+      closedEpic.find(".list-group-item").css("background-color", "gold");
       closedEpic.focus();
-      closedEpic.removeClass("newly-minted-div");
+      closedEpic.find(".list-group-item").addClass("newly-minted");
+      closedEpic.find(".list-group-item").css("background-color", "#fff");
       $("#epicname").focus();
       return false;
     },
