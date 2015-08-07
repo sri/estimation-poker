@@ -37,6 +37,10 @@ if (Meteor.isClient) {
   });
 
   Template.epics.events({
+    'click .clear-user': function(event, template) {
+      localStorage.removeItem('username');
+      Session.set("username", null);
+    },
     'click .show-votes': function(event, template) {
       // TODO(sri): what if two click on show-votes
       // one right after another?
@@ -51,7 +55,6 @@ if (Meteor.isClient) {
       closedEpic.focus();
       closedEpic.find(".list-group-item").addClass("newly-minted");
       closedEpic.find(".list-group-item").css("background-color", "#fff");
-      $("#epicname").focus();
       return false;
     },
 

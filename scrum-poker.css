@@ -30,6 +30,10 @@ body {
   margin: 20px 0;
 }
 
+.clear-user {
+  cursor: pointer;
+}
+
 .newly-minted {
   background-color:transparent;
   -moz-transition:background-color 2s;
