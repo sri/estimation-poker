@@ -22,19 +22,19 @@
     </div>
     <div class="panel-body points">
       <div class="btn-group" role="group">
-        <button type="button" class="btn btn-default point">2</button>
-        <button type="button" class="btn btn-default point">3</button>
-        <button type="button" class="btn btn-default point">5</button>
-        <button type="button" class="btn btn-default point">8</button>
-        <button type="button" class="btn btn-default point">13</button>
+        <button type="button" class="btn btn-default point" data-points="2">2</button>
+        <button type="button" class="btn btn-default point" data-points="3">3</button>
+        <button type="button" class="btn btn-default point" data-points="5">5</button>
+        <button type="button" class="btn btn-default point" data-points="8">8</button>
+        <button type="button" class="btn btn-default point" data-points="13">13</button>
         <div class="btn-group" role="group">
            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
              More
              <span class="caret"></span>
            </button>
            <ul class="dropdown-menu">
-             <li><a href="#">Back to Product</a></li>
-             <li><a href="#">&infin;</a></li>
+             <li><a href="#" class="point" data-points="back-to-product">Back to Product</a></li>
+             <li><a href="#" class="point" data-points="infinity">&infin;</a></li>
            </ul>
          </div>
       </div>
@@ -45,7 +45,7 @@
 <template name="user">
   <div class="user">
     {{#if user}}
-      <h2><span class="label label-info">{{user}}.i.am</span></h2>
+      <h2><span class="label label-default">Name: {{user}}</span></h2>
     {{else}}
       <div class="page-header">
         <h1>Scrum.poker()</h1>
@@ -67,9 +67,6 @@
     <div class="panel-heading">
       <h3 class="panel-title">
         Epics
-        <div class="create-epic">
-          <span class="glyphicon glyphicon-plus" title="Create new Epic"></span>
-        </div>
       </h3>
     </div>
     <div class="panel-body">
@@ -77,7 +74,15 @@
         <div class="epic open-epic">
           <div class="panel panel-success">
             <div class="panel-heading">
-              <h4 class="panel-title">{{name}}</h4>
+              <h4 class="panel-title">
+                {{#if hasName name}}
+                  {{name}}
+                {{else}}
+                  <form>
+                    <input type="text" class="form-control" name="epicname" placeholder="Epic name" />
+                  </form>
+                {{/if}}
+              </h4>
             </div>
             <div class="panel-body points">
               <div class="btn-group" role="group">
@@ -101,8 +106,8 @@
             <ul class="list-group">
               {{> votes id=_id closed="false"}}
               <li class="list-group-item">
-                <button type="button" class="btn btn-default btn-lg btn-block show-votes">
-                  Show Votes
+                <button type="button" class="btn btn-info btn-lg btn-block show-votes">
+                  Show Votes <span class="glyphicon glyphicon-eye-open"></span>
                 </button>
               </li>
             </ul>
@@ -133,7 +138,7 @@
         {{#if isClosed}}
           {{points}}
         {{else}}
-          ?
+          <span class="glyphicon glyphicon-question-sign"></span>
         {{/if}}
       </span>
       {{by}}

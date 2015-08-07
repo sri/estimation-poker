@@ -4,6 +4,10 @@ Votes = new Mongo.Collection("votes");
 
 if (Meteor.isClient) {
 
+  if (localStorage["username"]) {
+    Session.set("username", localStorage["username"]);
+  }
+
   Template.user.helpers({
     user: function() {
       return Session.get("username");
@@ -18,6 +22,7 @@ if (Meteor.isClient) {
         return;
       }
       Session.set("username", username);
+      localStorage["username"] = username;
       $(".page-header").hide();
       return false;
     }
@@ -26,20 +31,23 @@ if (Meteor.isClient) {
   Template.epics.events({
     'click .show-votes': function(event, template) {
       var current = Epics.findOne({current: true});
+      if (!Votes.findOne({epic: current._id})) {
+        return false;
+      }
       Epics.update({_id: current._id}, {$set: {current: false}});
       return false;
     },
 
-    'click .create-epic': function(event, template) {
-      var name = $.trim(prompt("Epic Name") || "").toUpperCase();
+    'submit form': function(event, template) {
+      var name = $.trim(event.target.epicname.value).toUpperCase();
       if (!name) {
-        return;
+        return false;
       }
       var current = Epics.findOne({current: true});
       if (current) {
-        Epics.update({_id: current._id}, {$set: {current: false}});
+        Epics.update({_id: current._id}, {$set: {name: name}});
       }
-      Epics.insert({current: true, name: name, createdAt: (new Date).valueOf()});
+      return false;
     },
 
     'click .point': function(event, template) {
@@ -51,21 +59,29 @@ if (Meteor.isClient) {
       var points = parseInt(event.target.innerHTML);
       var current = Epics.findOne({current: true});
       if (!current) {
-        current = Epics.insert({current: true, createdAt: (new Date).valueOf()});
+        alert("err");
+        // current = Epics.insert({current: true, createdAt: (new Date).valueOf()});
       }
       var currentVote = Votes.findOne({by: username, epic: current._id});
       if (currentVote) {
         Votes.update({_id: currentVote._id}, {$set: {points: points}});
       } else {
-        console.log("done inserting")
         Votes.insert({by: username, epic: current._id, points: points});
       }
     }
-
-  })
+  });
 
   Template.epics.helpers({
+    hasName: function(name) {
+      if (!name) return false;
+      return true;
+    },
     openEpic: function() {
+      var current = Epics.findOne({current: true});
+      if (current) {
+        return current;
+      }
+      Epics.insert({current: true, createdAt: (new Date).valueOf(), name: ""});
       return Epics.findOne({current: true});
     },
 
