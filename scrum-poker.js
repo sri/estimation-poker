@@ -8,11 +8,16 @@ if (Meteor.isClient) {
     Session.set("username", localStorage["username"]);
   }
 
+  function currentSprintId() {
+    var path = window.location.pathname;
+    return path.replace(/^\/sprint\//, "");
+  }
+
   if (window.location.pathname === "/") {
     var sprintId = Sprints.insert({active: true, createdAt: (new Date).valueOf()});
     var epicId = Epics.insert({current: true, createdAt: (new Date).valueOf(), name: "", sprint: sprintId});
 
-    history.pushState(null, null, sprintId);
+    history.pushState(null, null, "/sprint/" + sprintId);
   }
 
   $(document).ready(function() {
@@ -51,12 +56,12 @@ if (Meteor.isClient) {
     'click .show-votes': function(event, template) {
       // TODO(sri): what if two click on show-votes
       // one right after another?
-      var current = Epics.findOne({current: true, sprint: window.location.pathname.substring(1)});
+      var current = Epics.findOne({current: true, sprint: currentSprintId()});
       if (!Votes.findOne({epic: current._id})) {
         return false;
       }
       Epics.update({_id: current._id}, {$set: {current: false}});
-      Epics.insert({current: true, createdAt: (new Date).valueOf(), name: "", sprint: window.location.pathname.substring(1)});
+      Epics.insert({current: true, createdAt: (new Date).valueOf(), name: "", sprint: currentSprintId()});
       var closedEpic = $( $(".closed-epic").get(0) );
       closedEpic.find(".list-group-item").css("background-color", "gold");
       closedEpic.focus();
@@ -70,7 +75,7 @@ if (Meteor.isClient) {
       if (!name) {
         return false;
       }
-      var current = Epics.findOne({current: true, sprint: window.location.pathname.substring(1)});
+      var current = Epics.findOne({current: true, sprint: currentSprintId()});
       if (current) {
         Epics.update({_id: current._id}, {$set: {name: name}});
       }
@@ -84,7 +89,7 @@ if (Meteor.isClient) {
         return;
       }
       var points = event.target.innerHTML;
-      var current = Epics.findOne({current: true, sprint: window.location.pathname.substring(1)});
+      var current = Epics.findOne({current: true, sprint: currentSprintId()});
       if (!current) {
         alert("err");
         // current = Epics.insert({current: true, createdAt: (new Date).valueOf()});
@@ -114,7 +119,7 @@ if (Meteor.isClient) {
       return true;
     },
     openEpic: function() {
-      return Epics.findOne({current: true, sprint: window.location.pathname.substring(1)});
+      return Epics.findOne({current: true, sprint: currentSprintId()});
       // if (current) {
       //   return current;
       // }
@@ -122,7 +127,7 @@ if (Meteor.isClient) {
       // return Epics.findOne({current: true});
     },
     closedEpics: function() {
-      return Epics.find({current: false, sprint: window.location.pathname.substring(1)}, {sort: {createdAt: -1}});
+      return Epics.find({current: false, sprint: currentSprintId()}, {sort: {createdAt: -1}});
     },
     consensus: function(epicId) {
       var total = 0,
