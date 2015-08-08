@@ -8,6 +8,13 @@ if (Meteor.isClient) {
     Session.set("username", localStorage["username"]);
   }
 
+  if (window.location.pathname === "/") {
+    var sprintId = Sprints.insert({active: true, createdAt: (new Date).valueOf()});
+    var epicId = Epics.insert({current: true, createdAt: (new Date).valueOf(), name: "", sprint: sprintId});
+
+    history.pushState(null, null, sprintId);
+  }
+
   $(document).ready(function() {
     if ($("#username").is(":visible")) {
       $("#username").focus();
@@ -44,12 +51,12 @@ if (Meteor.isClient) {
     'click .show-votes': function(event, template) {
       // TODO(sri): what if two click on show-votes
       // one right after another?
-      var current = Epics.findOne({current: true});
+      var current = Epics.findOne({current: true, sprint: window.location.pathname.substring(1)});
       if (!Votes.findOne({epic: current._id})) {
         return false;
       }
       Epics.update({_id: current._id}, {$set: {current: false}});
-      Epics.insert({current: true, createdAt: (new Date).valueOf(), name: ""});
+      Epics.insert({current: true, createdAt: (new Date).valueOf(), name: "", sprint: window.location.pathname.substring(1)});
       var closedEpic = $( $(".closed-epic").get(0) );
       closedEpic.find(".list-group-item").css("background-color", "gold");
       closedEpic.focus();
@@ -63,7 +70,7 @@ if (Meteor.isClient) {
       if (!name) {
         return false;
       }
-      var current = Epics.findOne({current: true});
+      var current = Epics.findOne({current: true, sprint: window.location.pathname.substring(1)});
       if (current) {
         Epics.update({_id: current._id}, {$set: {name: name}});
       }
@@ -77,7 +84,7 @@ if (Meteor.isClient) {
         return;
       }
       var points = event.target.innerHTML;
-      var current = Epics.findOne({current: true});
+      var current = Epics.findOne({current: true, sprint: window.location.pathname.substring(1)});
       if (!current) {
         alert("err");
         // current = Epics.insert({current: true, createdAt: (new Date).valueOf()});
@@ -107,7 +114,7 @@ if (Meteor.isClient) {
       return true;
     },
     openEpic: function() {
-      return Epics.findOne({current: true});
+      return Epics.findOne({current: true, sprint: window.location.pathname.substring(1)});
       // if (current) {
       //   return current;
       // }
@@ -115,7 +122,7 @@ if (Meteor.isClient) {
       // return Epics.findOne({current: true});
     },
     closedEpics: function() {
-      return Epics.find({current: false}, {sort: {createdAt: -1}});
+      return Epics.find({current: false, sprint: window.location.pathname.substring(1)}, {sort: {createdAt: -1}});
     },
     consensus: function(epicId) {
       var total = 0,
@@ -146,13 +153,13 @@ if (Meteor.isClient) {
 if (Meteor.isServer) {
   Meteor.startup(function () {
 
-   if (!Epics.findOne({current: true})) {
-      Epics.insert({
-        current: true,
-        createdAt: (new Date).valueOf(),
-        name: ""
-      });
-    }
+   // if (!Epics.findOne({current: true})) {
+   //    Epics.insert({
+   //      current: true,
+   //      createdAt: (new Date).valueOf(),
+   //      name: ""
+   //    });
+   //  }
 
     return Meteor.methods({
       // In console:
@@ -160,7 +167,7 @@ if (Meteor.isServer) {
       removeAll: function() {
         Votes.remove({});
         Epics.remove({});
-        Epics.insert({current: true, createdAt: (new Date).valueOf(), name: ""});
+        Sprints.remove({});
       }
     });
 
