@@ -53,16 +53,22 @@
           <div class="panel panel-success">
             <div class="panel-heading">
               <h4 class="panel-title">
-                {{#if hasName name}}
-                  {{name}}
-                {{else}}
-                  <div class="hidden-xs">
+                <div class="ticket-name">
+                  <span class="glyphicon glyphicon-pencil"></span>
+                </div>
+                <div class="ticket-name">
+                  {{#if hasName name}}
+                    {{name}}
+                  {{/if}}
+                  &nbsp;
+                </div>
+                <div class="hidden-xs">
+                  <div class="ticket-edit">
                     <form>
-                      <input type="text" class="form-control" id="ticketname" name="ticketname" placeholder="Ticket name (optional)" />
+                      <input type="text" class="form-control" id="ticketname" name="ticketname" placeholder="New name..." />
                     </form>
                   </div>
-                {{/if}}
-                &nbsp;
+                </div>
               </h4>
             </div>
             <div class="panel-body points">

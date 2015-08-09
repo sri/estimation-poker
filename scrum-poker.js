@@ -48,6 +48,14 @@ if (Meteor.isClient) {
   });
 
   Template.tickets.events({
+    'blur input[name=ticketname]': function(event, template) {
+      $(".open-ticket").find("form").submit();
+    },
+    'click .ticket-name': function(event, template) {
+      $(".ticket-name").hide();
+      $(".ticket-edit").show();
+      $(".ticket-edit input").focus();
+    },
     'click .clear-user': function(event, template) {
       localStorage.removeItem('username');
       Session.set("username", null);
@@ -70,10 +78,15 @@ if (Meteor.isClient) {
     },
 
     'submit form': function(event, template) {
+      $(".ticket-edit").hide();
+      $(".ticket-name").show();
+
       var name = $.trim(event.target.ticketname.value).toUpperCase();
       if (!name) {
         return false;
       }
+      event.target.ticketname.value = "";
+
       var current = Tickets.findOne({current: true, sprint: currentSprintId()});
       if (current) {
         Tickets.update({_id: current._id}, {$set: {name: name}});

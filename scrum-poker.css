@@ -82,6 +82,18 @@ body {
   padding-top: 10px;
 }
 
+.ticket-name {
+  cursor: text;
+}
+
+.ticket-edit {
+  display: none;
+}
+
+.ticket-name .glyphicon {
+  float: right;
+}
+
 .open-ticket {
    position: relative;
 }
