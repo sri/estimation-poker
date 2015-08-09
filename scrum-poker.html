@@ -53,10 +53,15 @@
           <div class="panel panel-success">
             <div class="panel-heading">
               <h4 class="panel-title">
-                <div class="ticket-name">
+                <div class="ticket-name hidden-xs">
                   <span class="glyphicon glyphicon-pencil"></span>
                 </div>
-                <div class="ticket-name">
+                <div class="visible-xs-block">
+                  {{#if hasName name}}
+                    {{name}}
+                  {{/if}}&nbsp;
+                </div>
+                <div class="ticket-name hidden-xs">
                   {{#if hasName name}}
                     {{name}}
                   {{/if}}
