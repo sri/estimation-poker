@@ -9,15 +9,14 @@ if (Meteor.isClient) {
   }
 
   function currentSprintId() {
-    var path = window.location.pathname;
-    return path.replace(/^\/sprint\//, "");
+    return window.location.pathname.substring(1);
   }
 
   if (window.location.pathname === "/") {
     var sprintId = Sprints.insert({active: true, createdAt: (new Date).valueOf()});
     var epicId = Epics.insert({current: true, createdAt: (new Date).valueOf(), name: "", sprint: sprintId});
 
-    history.pushState(null, null, "/sprint/" + sprintId);
+    history.pushState(null, null, "/" + sprintId);
   }
 
   $(document).ready(function() {
@@ -39,7 +38,7 @@ if (Meteor.isClient) {
       event.preventDefault();
       var username = $.trim(event.target.username.value);
       if (!username) {
-        return;
+        return false;
       }
       Session.set("username", username);
       localStorage["username"] = username;
