@@ -1,16 +1,32 @@
 Sprints = new Mongo.Collection("sprints");
 Tickets = new Mongo.Collection("tickets");
 Votes = new Mongo.Collection("votes");
+Users = new Mongo.Collection("users");
 
 if (Meteor.isClient) {
 
   if (localStorage["username"]) {
     Session.set("username", localStorage["username"]);
   }
-
   function currentSprintId() {
     return window.location.pathname.substring(1);
   }
+
+  // function addCurrentUser() {
+  //   console.log("addCurrentUser")
+  //   var username = Session.get("username");
+  //   if (!username) {
+  //     return;
+  //   }
+  //   var selector = {username: username,
+  //                   sprint: currentSprintId()};
+  //   var user = Users.findOne(selector);
+  //   console.log("selector", selector, "user", user);
+  //   if (!user) {
+  //     Users.insert(selector);
+  //   }
+  //   console.log("atEnd", Users.findOne(selector))
+  // }
 
   if (window.location.pathname === "/") {
     var sprintId = Sprints.insert({active: true, createdAt: (new Date).valueOf()});
@@ -18,6 +34,11 @@ if (Meteor.isClient) {
 
     history.pushState(null, null, "/" + sprintId);
   }
+
+  // Meteor.subscribe('users', function() {
+  //   addCurrentUser();
+  // });
+
 
   $(document).ready(function() {
     if ($("#username").is(":visible")) {
@@ -42,8 +63,28 @@ if (Meteor.isClient) {
       }
       Session.set("username", username);
       localStorage["username"] = username;
+      Users.insert({username: username, sprint: currentSprintId()});
       $(".page-header").hide();
       return false;
+    }
+  });
+
+  Template.users.helpers({
+    connectedUsers: function() {
+      var username = Session.get("username");
+      console.log("username", username);
+      if (username) {
+        var userSelector = {username: username, sprint: currentSprintId()};
+        if (!Users.findOne(userSelector)) {
+          console.log("inserting", userSelector);
+          Users.insert(userSelector);
+        }
+      }
+      return Users.find({sprint: currentSprintId()});
+    },
+    hasVote: function(username) {
+      var ticketId = Template.parentData(1).id;
+      return Votes.findOne({username: username, ticket: ticketId});
     }
   });
 
@@ -106,11 +147,11 @@ if (Meteor.isClient) {
         alert("err");
         // current = Tickets.insert({current: true, createdAt: (new Date).valueOf()});
       }
-      var currentVote = Votes.findOne({by: username, ticket: current._id});
+      var currentVote = Votes.findOne({username: username, ticket: current._id});
       if (currentVote) {
         Votes.update({_id: currentVote._id}, {$set: {points: points}});
       } else {
-        Votes.insert({by: username, ticket: current._id, points: points});
+        Votes.insert({username: username, ticket: current._id, points: points});
       }
       // dd-points are points in the dropdown.
       // If they return false, then
@@ -185,6 +226,7 @@ if (Meteor.isServer) {
         Votes.remove({});
         Tickets.remove({});
         Sprints.remove({});
+        Users.remove({});
       }
     });
 

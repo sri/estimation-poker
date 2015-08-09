@@ -34,6 +34,21 @@
   </div>
 </template>
 
+<template name="users">
+  {{#each connectedUsers}}
+    <li class="list-group-item">
+      <span class="badge">
+        {{#if hasVote username}}
+          <span class="glyphicon glyphicon-question-sign glyph-big"></span>
+        {{else}}
+          <span class="glyphicon glyphicon-minus glyph-big"></span>
+        {{/if}}
+      </span>
+      {{username}}
+    </li>
+  {{/each}}
+</template>
+
 <template name="tickets">
   <div class="panel panel-default">
     <div class="panel-heading">
@@ -109,7 +124,7 @@
               </div>
             </div>
             <ul class="list-group">
-              {{> votes id=_id closed="false"}}
+              {{> users id=_id}}
               <li class="list-group-item">
                 <button type="button" class="btn btn-info btn-lg btn-block show-votes">
                   Show Votes <span class="glyphicon glyphicon-eye-open"></span>
@@ -150,7 +165,7 @@
           <span class="glyphicon glyphicon-question-sign question-sign"></span>
         {{/if}}
       </span>
-      {{by}}
+      {{username}}
     </li>
   {{/each}}
 </template>
