@@ -6,7 +6,7 @@
 <body>
   <div class="container">
    {{> user}}
-   {{> epics}}
+   {{> tickets}}
   </div>
   <footer class="footer">
     <div class="container">
@@ -34,11 +34,11 @@
   </div>
 </template>
 
-<template name="epics">
+<template name="tickets">
   <div class="panel panel-default">
     <div class="panel-heading">
       <h3 class="panel-title">
-        Epics
+        Tickets
         {{#if user}}
           <span class="label label-primary clear-user" title="Click to clear this username">
             <span class="glyphicon glyphicon-user"></span>
@@ -48,17 +48,19 @@
       </h3>
     </div>
     <div class="panel-body">
-      {{#with openEpic}}
-        <div class="epic open-epic">
+      {{#with openTicket}}
+        <div class="ticket open-ticket">
           <div class="panel panel-success">
             <div class="panel-heading">
               <h4 class="panel-title">
                 {{#if hasName name}}
                   {{name}}
                 {{else}}
-                  <form>
-                    <input type="text" class="form-control" id="epicname" name="epicname" placeholder="Epic name" />
-                  </form>
+                  <div>
+                    <form>
+                      <input type="text" class="form-control" id="ticketname" name="ticketname" placeholder="Ticket name (optional)" />
+                    </form>
+                  </div>
                 {{/if}}
               </h4>
             </div>
@@ -106,8 +108,8 @@
         </div>
       {{/with}}
 
-      {{#each closedEpics}}
-        <div class="epic closed-epic">
+      {{#each closedTickets}}
+        <div class="ticket closed-ticket">
           <div class="panel panel-default">
             <div class="panel-heading">
               <h4 class="panel-title">{{name}}</h4>

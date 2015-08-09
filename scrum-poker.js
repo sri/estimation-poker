@@ -1,5 +1,5 @@
 Sprints = new Mongo.Collection("sprints");
-Epics = new Mongo.Collection("epics");
+Tickets = new Mongo.Collection("tickets");
 Votes = new Mongo.Collection("votes");
 
 if (Meteor.isClient) {
@@ -14,7 +14,7 @@ if (Meteor.isClient) {
 
   if (window.location.pathname === "/") {
     var sprintId = Sprints.insert({active: true, createdAt: (new Date).valueOf()});
-    var epicId = Epics.insert({current: true, createdAt: (new Date).valueOf(), name: "", sprint: sprintId});
+    var ticketId = Tickets.insert({current: true, createdAt: (new Date).valueOf(), name: "", sprint: sprintId});
 
     history.pushState(null, null, "/" + sprintId);
   }
@@ -22,8 +22,8 @@ if (Meteor.isClient) {
   $(document).ready(function() {
     if ($("#username").is(":visible")) {
       $("#username").focus();
-    } else if ($("#epicname").is(":visible")) {
-      $("#epicname").focus();
+    } else if ($("#ticketname").is(":visible")) {
+      $("#ticketname").focus();
     }
   });
 
@@ -47,7 +47,7 @@ if (Meteor.isClient) {
     }
   });
 
-  Template.epics.events({
+  Template.tickets.events({
     'click .clear-user': function(event, template) {
       localStorage.removeItem('username');
       Session.set("username", null);
@@ -55,28 +55,28 @@ if (Meteor.isClient) {
     'click .show-votes': function(event, template) {
       // TODO(sri): what if two click on show-votes
       // one right after another?
-      var current = Epics.findOne({current: true, sprint: currentSprintId()});
-      if (!Votes.findOne({epic: current._id})) {
+      var current = Tickets.findOne({current: true, sprint: currentSprintId()});
+      if (!Votes.findOne({ticket: current._id})) {
         return false;
       }
-      Epics.update({_id: current._id}, {$set: {current: false}});
-      Epics.insert({current: true, createdAt: (new Date).valueOf(), name: "", sprint: currentSprintId()});
-      var closedEpic = $( $(".closed-epic").get(0) );
-      closedEpic.find(".list-group-item").css("background-color", "gold");
-      closedEpic.focus();
-      closedEpic.find(".list-group-item").addClass("newly-minted");
-      closedEpic.find(".list-group-item").css("background-color", "#fff");
+      Tickets.update({_id: current._id}, {$set: {current: false}});
+      Tickets.insert({current: true, createdAt: (new Date).valueOf(), name: "", sprint: currentSprintId()});
+      var closedTicket = $( $(".closed-ticket").get(0) );
+      closedTicket.find(".list-group-item").css("background-color", "gold");
+      closedTicket.focus();
+      closedTicket.find(".list-group-item").addClass("newly-minted");
+      closedTicket.find(".list-group-item").css("background-color", "#fff");
       return false;
     },
 
     'submit form': function(event, template) {
-      var name = $.trim(event.target.epicname.value).toUpperCase();
+      var name = $.trim(event.target.ticketname.value).toUpperCase();
       if (!name) {
         return false;
       }
-      var current = Epics.findOne({current: true, sprint: currentSprintId()});
+      var current = Tickets.findOne({current: true, sprint: currentSprintId()});
       if (current) {
-        Epics.update({_id: current._id}, {$set: {name: name}});
+        Tickets.update({_id: current._id}, {$set: {name: name}});
       }
       return false;
     },
@@ -88,16 +88,16 @@ if (Meteor.isClient) {
         return;
       }
       var points = event.target.innerHTML;
-      var current = Epics.findOne({current: true, sprint: currentSprintId()});
+      var current = Tickets.findOne({current: true, sprint: currentSprintId()});
       if (!current) {
         alert("err");
-        // current = Epics.insert({current: true, createdAt: (new Date).valueOf()});
+        // current = Tickets.insert({current: true, createdAt: (new Date).valueOf()});
       }
-      var currentVote = Votes.findOne({by: username, epic: current._id});
+      var currentVote = Votes.findOne({by: username, ticket: current._id});
       if (currentVote) {
         Votes.update({_id: currentVote._id}, {$set: {points: points}});
       } else {
-        Votes.insert({by: username, epic: current._id, points: points});
+        Votes.insert({by: username, ticket: current._id, points: points});
       }
       // dd-points are points in the dropdown.
       // If they return false, then
@@ -109,7 +109,7 @@ if (Meteor.isClient) {
     }
   });
 
-  Template.epics.helpers({
+  Template.tickets.helpers({
     user: function() {
       return Session.get("username");
     },
@@ -117,22 +117,22 @@ if (Meteor.isClient) {
       if (!name) return false;
       return true;
     },
-    openEpic: function() {
-      return Epics.findOne({current: true, sprint: currentSprintId()});
+    openTicket: function() {
+      return Tickets.findOne({current: true, sprint: currentSprintId()});
       // if (current) {
       //   return current;
       // }
-      // Epics.insert({current: true, createdAt: (new Date).valueOf(), name: ""});
-      // return Epics.findOne({current: true});
+      // Tickets.insert({current: true, createdAt: (new Date).valueOf(), name: ""});
+      // return Tickets.findOne({current: true});
     },
-    closedEpics: function() {
-      return Epics.find({current: false, sprint: currentSprintId()}, {sort: {createdAt: -1}});
+    closedTickets: function() {
+      return Tickets.find({current: false, sprint: currentSprintId()}, {sort: {createdAt: -1}});
     },
-    consensus: function(epicId) {
+    consensus: function(ticketId) {
       var total = 0,
           count = 0;
 
-      Votes.find({epic: epicId}).forEach(function(vote) {
+      Votes.find({ticket: ticketId}).forEach(function(vote) {
         total += vote.points;
         count += 1;
       });
@@ -145,8 +145,8 @@ if (Meteor.isClient) {
   })
 
   Template.votes.helpers({
-    votes: function(epicId) {
-      return Votes.find({epic: epicId});
+    votes: function(ticketId) {
+      return Votes.find({ticket: ticketId});
     },
     isClosed: function() {
       return Template.parentData(1).closed === "true";
@@ -157,8 +157,8 @@ if (Meteor.isClient) {
 if (Meteor.isServer) {
   Meteor.startup(function () {
 
-   // if (!Epics.findOne({current: true})) {
-   //    Epics.insert({
+   // if (!Tickets.findOne({current: true})) {
+   //    Tickets.insert({
    //      current: true,
    //      createdAt: (new Date).valueOf(),
    //      name: ""
@@ -170,7 +170,7 @@ if (Meteor.isServer) {
       // > Meteor.call("removeAll")
       removeAll: function() {
         Votes.remove({});
-        Epics.remove({});
+        Tickets.remove({});
         Sprints.remove({});
       }
     });

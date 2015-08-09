@@ -75,34 +75,34 @@ body {
   margin-bottom: 15px;
 }
 
-.epic {
+.ticket {
   margin-top: 5px;
   padding-left: 5px;
   padding-right: 5px;
   padding-top: 10px;
 }
 
-.open-epic {
+.open-ticket {
    position: relative;
 }
 
-.create-epic {
+.create-ticket {
   float: right;
   cursor: pointer;
 }
 
-.closed-epic {
+.closed-ticket {
 }
 
-.epic .list-group-item:first-child {
+.ticket .list-group-item:first-child {
   margin-top: 12px;
 }
 
-.epic .list-group-item {
+.ticket .list-group-item {
   background: inherit;
 }
 
-.epic .badge {
+.ticket .badge {
   background: #fff;
   color: #000;
   font-weight: normal;
