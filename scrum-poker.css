@@ -48,6 +48,10 @@ body {
   background-color: gold;
 }
 
+.votes-header {
+  font-size: 14px;
+}
+
 .glyph-big {
   font-size: 20px;
 }
