@@ -12,33 +12,12 @@ if (Meteor.isClient) {
     return window.location.pathname.substring(1);
   }
 
-  // function addCurrentUser() {
-  //   console.log("addCurrentUser")
-  //   var username = Session.get("username");
-  //   if (!username) {
-  //     return;
-  //   }
-  //   var selector = {username: username,
-  //                   sprint: currentSprintId()};
-  //   var user = Users.findOne(selector);
-  //   console.log("selector", selector, "user", user);
-  //   if (!user) {
-  //     Users.insert(selector);
-  //   }
-  //   console.log("atEnd", Users.findOne(selector))
-  // }
-
   if (window.location.pathname === "/") {
     var sprintId = Sprints.insert({active: true, createdAt: (new Date).valueOf()});
     var ticketId = Tickets.insert({current: true, createdAt: (new Date).valueOf(), name: "", sprint: sprintId});
 
     history.pushState(null, null, "/" + sprintId);
   }
-
-  // Meteor.subscribe('users', function() {
-  //   addCurrentUser();
-  // });
-
 
   $(document).ready(function() {
     if ($("#username").is(":visible")) {
@@ -63,7 +42,7 @@ if (Meteor.isClient) {
       }
       Session.set("username", username);
       localStorage["username"] = username;
-      Users.insert({username: username, sprint: currentSprintId()});
+      Users.insert({username: username, sprint: currentSprintId(), joinedAt: (new Date).valueOf()});
       $(".page-header").hide();
       return false;
     }
@@ -72,15 +51,15 @@ if (Meteor.isClient) {
   Template.users.helpers({
     connectedUsers: function() {
       var username = Session.get("username");
-      console.log("username", username);
       if (username) {
         var userSelector = {username: username, sprint: currentSprintId()};
         if (!Users.findOne(userSelector)) {
-          console.log("inserting", userSelector);
-          Users.insert(userSelector);
+          var insertSelector = _.extend({}, userSelector, {joinedAt: (new Date).valueOf()});
+          Users.insert(insertSelector);
         }
       }
-      return Users.find({sprint: currentSprintId()});
+      var asc = 1; // smallest to larges
+      return Users.find({sprint: currentSprintId()}, {sort: {createdAt: asc}});
     },
     hasVote: function(username) {
       var ticketId = Template.parentData(1).id;
