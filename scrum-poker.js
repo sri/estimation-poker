@@ -4,6 +4,19 @@ Votes = new Mongo.Collection("votes");
 Users = new Mongo.Collection("users");
 
 if (Meteor.isClient) {
+  Meteor.startup(function () {
+
+    Meteor.subscribe("users", function() {
+      var username = Session.get("username");
+      if (username) {
+        var userSelector = {username: username, sprint: currentSprintId()};
+        if (!Users.findOne(userSelector)) {
+          var insertSelector = _.extend({}, userSelector, {joinedAt: (new Date).valueOf()});
+          Users.insert(insertSelector);
+        }
+      }
+    });
+  });
 
   if (localStorage["username"]) {
     Session.set("username", localStorage["username"]);
@@ -50,14 +63,6 @@ if (Meteor.isClient) {
 
   Template.users.helpers({
     connectedUsers: function() {
-      var username = Session.get("username");
-      if (username) {
-        var userSelector = {username: username, sprint: currentSprintId()};
-        if (!Users.findOne(userSelector)) {
-          var insertSelector = _.extend({}, userSelector, {joinedAt: (new Date).valueOf()});
-          Users.insert(insertSelector);
-        }
-      }
       var asc = 1; // smallest to larges
       return Users.find({sprint: currentSprintId()}, {sort: {createdAt: asc}});
     },
@@ -190,13 +195,9 @@ if (Meteor.isClient) {
 if (Meteor.isServer) {
   Meteor.startup(function () {
 
-   // if (!Tickets.findOne({current: true})) {
-   //    Tickets.insert({
-   //      current: true,
-   //      createdAt: (new Date).valueOf(),
-   //      name: ""
-   //    });
-   //  }
+    Meteor.publish("users", function() {
+      return Users.find({});
+    });
 
     return Meteor.methods({
       // In console:
