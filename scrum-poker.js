@@ -1,4 +1,4 @@
-Sprints = new Mongo.Collection("sprints");
+Sessions = new Mongo.Collection("sessions");
 Estimates = new Mongo.Collection("estimates");
 Votes = new Mongo.Collection("votes");
 Users = new Mongo.Collection("users");
@@ -9,7 +9,7 @@ if (Meteor.isClient) {
     Meteor.subscribe("users", function() {
       var username = Session.get("username");
       if (username) {
-        var userSelector = {username: username, sprint: currentSprintId()};
+        var userSelector = {username: username, session: currentSessionId()};
         if (!Users.findOne(userSelector)) {
           var insertSelector = _.extend({}, userSelector, {joinedAt: (new Date).valueOf()});
           Users.insert(insertSelector);
@@ -21,15 +21,15 @@ if (Meteor.isClient) {
   if (localStorage["username"]) {
     Session.set("username", localStorage["username"]);
   }
-  function currentSprintId() {
+  function currentSessionId() {
     return window.location.pathname.substring(1);
   }
 
   if (window.location.pathname === "/") {
-    var sprintId = Sprints.insert({active: true, createdAt: (new Date).valueOf()});
-    var estimateId = Estimates.insert({current: true, createdAt: (new Date).valueOf(), name: "", sprint: sprintId});
+    var sessionId = Sessions.insert({active: true, createdAt: (new Date).valueOf()});
+    var estimateId = Estimates.insert({current: true, createdAt: (new Date).valueOf(), name: "", session: sessionId});
 
-    history.pushState(null, null, "/" + sprintId);
+    history.pushState(null, null, "/" + sessionId);
   }
 
   $(document).ready(function() {
@@ -55,7 +55,7 @@ if (Meteor.isClient) {
       }
       Session.set("username", username);
       localStorage["username"] = username;
-      Users.insert({username: username, sprint: currentSprintId(), joinedAt: (new Date).valueOf()});
+      Users.insert({username: username, session: currentSessionId(), joinedAt: (new Date).valueOf()});
       $(".page-header").hide();
       return false;
     }
@@ -64,7 +64,7 @@ if (Meteor.isClient) {
   Template.users.helpers({
     connectedUsers: function() {
       var asc = 1; // smallest to larges
-      return Users.find({sprint: currentSprintId()}, {sort: {createdAt: asc}});
+      return Users.find({session: currentSessionId()}, {sort: {createdAt: asc}});
     },
     hasVote: function(username) {
       var estimateId = Template.parentData(1).id;
@@ -88,12 +88,12 @@ if (Meteor.isClient) {
     'click .show-votes': function(event, template) {
       // TODO(sri): what if two click on show-votes
       // one right after another?
-      var current = Estimates.findOne({current: true, sprint: currentSprintId()});
+      var current = Estimates.findOne({current: true, session: currentSessionId()});
       if (!Votes.findOne({estimate: current._id})) {
         return false;
       }
       Estimates.update({_id: current._id}, {$set: {current: false}});
-      Estimates.insert({current: true, createdAt: (new Date).valueOf(), name: "", sprint: currentSprintId()});
+      Estimates.insert({current: true, createdAt: (new Date).valueOf(), name: "", session: currentSessionId()});
       var closedEstimate = $( $(".closed-estimate").get(0) );
       closedEstimate.find(".list-group-item").css("background-color", "gold");
       closedEstimate.focus();
@@ -112,7 +112,7 @@ if (Meteor.isClient) {
       }
       event.target.estimatename.value = "";
 
-      var current = Estimates.findOne({current: true, sprint: currentSprintId()});
+      var current = Estimates.findOne({current: true, session: currentSessionId()});
       if (current) {
         Estimates.update({_id: current._id}, {$set: {name: name}});
       }
@@ -126,7 +126,7 @@ if (Meteor.isClient) {
         return;
       }
       var points = event.target.innerHTML;
-      var current = Estimates.findOne({current: true, sprint: currentSprintId()});
+      var current = Estimates.findOne({current: true, session: currentSessionId()});
       if (!current) {
         alert("err");
         // current = Estimates.insert({current: true, createdAt: (new Date).valueOf()});
@@ -156,7 +156,7 @@ if (Meteor.isClient) {
       return true;
     },
     openEstimate: function() {
-      return Estimates.findOne({current: true, sprint: currentSprintId()});
+      return Estimates.findOne({current: true, session: currentSessionId()});
       // if (current) {
       //   return current;
       // }
@@ -164,7 +164,7 @@ if (Meteor.isClient) {
       // return Estimates.findOne({current: true});
     },
     closedEstimates: function() {
-      return Estimates.find({current: false, sprint: currentSprintId()}, {sort: {createdAt: -1}});
+      return Estimates.find({current: false, session: currentSessionId()}, {sort: {createdAt: -1}});
     },
     consensus: function(estimateId) {
       var total = 0,
@@ -205,7 +205,7 @@ if (Meteor.isServer) {
       removeAll: function() {
         Votes.remove({});
         Estimates.remove({});
-        Sprints.remove({});
+        Sessions.remove({});
         Users.remove({});
       }
     });
