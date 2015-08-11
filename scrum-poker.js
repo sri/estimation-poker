@@ -150,6 +150,14 @@ if (Meteor.isClient) {
       } else {
         Points.insert({username: username, estimate: current._id, points: points});
       }
+
+      var nPoints = Points.find({estimate: current._id}).count();
+      var nUsers = Users.find({session: currentSessionId()}).count();
+
+      if (nPoints === nUsers) {
+        Estimates.update({_id: current._id}, {$set: {show: true}});
+      }
+
       // dd-points are points in the dropdown.
       // If they return false, then
       if ($(event.target).hasClass("dd-point")) {
