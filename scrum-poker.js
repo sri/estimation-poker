@@ -53,6 +53,7 @@ if (Meteor.isClient) {
       if (!username) {
         return false;
       }
+      username = username.charAt(0).toUpperCase() + username.slice(1).toLowerCase();
       Session.set("username", username);
       localStorage["username"] = username;
       Users.insert({username: username, session: currentSessionId(), joinedAt: (new Date).valueOf()});
@@ -63,8 +64,8 @@ if (Meteor.isClient) {
 
   Template.users.helpers({
     connectedUsers: function() {
-      var asc = 1; // smallest to larges
-      return Users.find({session: currentSessionId()}, {sort: {createdAt: asc}});
+      var asc = 1;
+      return Users.find({session: currentSessionId()}, {sort: {username: asc}});
     },
     hasPoint: function(username) {
       var estimateId = Template.parentData(1).id;
@@ -196,7 +197,8 @@ if (Meteor.isClient) {
 
   Template.points.helpers({
     pointsForEstimate: function(estimateId) {
-      return Points.find({estimate: estimateId});
+      var asc = 1;
+      return Points.find({estimate: estimateId}, {sort: {username: asc}});
     }
   });
 }
