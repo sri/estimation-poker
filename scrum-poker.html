@@ -47,7 +47,7 @@
     <li class="list-group-item">
       <span class="badge">
         {{#if showPoint}}
-          {{userPoints username}}
+          <span class="points-text">{{userPoints username}}</span>
         {{else}}
           {{#if hasPoint username}}
             <span class="glyphicon glyphicon-question-sign glyph-big"></span>
@@ -184,7 +184,7 @@
   {{#each pointsForEstimate id}}
     <li class="list-group-item">
       <span class="badge">
-        {{points}}
+        <span class="points-text">{{points}}</span>
       </span>
       {{username}}
     </li>
