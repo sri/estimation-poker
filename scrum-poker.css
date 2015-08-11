@@ -44,11 +44,15 @@ body {
 
 }
 
+.new-session {
+  float: right;
+}
+
 .newly-minted-with-bg-color {
   background-color: gold;
 }
 
-.votes-header {
+.points-header {
   font-size: 14px;
 }
 

@@ -37,8 +37,8 @@
 
 <template name="users">
   <li class="list-group-item">
-    <span class="badge votes-header">
-      <b>Votes</b>
+    <span class="badge points-header">
+      <b>Points</b>
     </span>
     <span class="glyphicon glyphicon-user"></span>
     <b>Users</b>
@@ -46,10 +46,14 @@
   {{#each connectedUsers}}
     <li class="list-group-item">
       <span class="badge">
-        {{#if hasVote username}}
-          <span class="glyphicon glyphicon-question-sign glyph-big"></span>
+        {{#if showPoint}}
+          {{userPoints username}}
         {{else}}
-          <span class="glyphicon glyphicon-minus glyph-big"></span>
+          {{#if hasPoint username}}
+            <span class="glyphicon glyphicon-question-sign glyph-big"></span>
+          {{else}}
+            <span class="glyphicon glyphicon-minus glyph-big"></span>
+          {{/if}}
         {{/if}}
       </span>
       {{username}}
@@ -133,9 +137,22 @@
             </div>
             <ul class="list-group">
               {{> users id=_id}}
-              <li class="list-group-item">
-                <button type="button" class="btn btn-info btn-lg btn-block show-votes">
-                  Show Votes <span class="glyphicon glyphicon-eye-open"></span>
+              <li class="list-group-item hidden-xs">
+                <button type="button" class="btn btn-info btn-md new-session">
+                  Another Estimate <span class="glyphicon glyphicon-repeat"></span>
+                </button>
+                <button type="button" class="btn btn-info btn-md show-points">
+                  Show Points <span class="glyphicon glyphicon-eye-open"></span>
+                </button>
+              </li>
+              <li class="list-group-item visible-xs-block">
+                <button type="button" class="btn btn-info btn-lg btn-block new-session2">
+                  Another Estimate <span class="glyphicon glyphicon-repeat"></span>
+                </button>
+              </li>
+              <li class="list-group-item visible-xs-block">
+                <button type="button" class="btn btn-info btn-lg btn-block show-points">
+                  Show Points <span class="glyphicon glyphicon-eye-open"></span>
                 </button>
               </li>
             </ul>
@@ -150,7 +167,7 @@
               <h4 class="panel-title">{{name}}&nbsp;</h4>
             </div>
             <ul class="list-group">
-              {{> votes id=_id closed="true"}}
+              {{> points id=_id closed="true"}}
              <!--  <li class="list-group-item">
                 <span class="badge">{{consensus id}}</span>
                 <b>Consensus</b>
@@ -163,15 +180,11 @@
   </div>
 </template>
 
-<template name="votes">
-  {{#each votes id}}
+<template name="points">
+  {{#each pointsForEstimate id}}
     <li class="list-group-item">
       <span class="badge">
-        {{#if isClosed}}
-          {{points}}
-        {{else}}
-          <span class="glyphicon glyphicon-question-sign question-sign"></span>
-        {{/if}}
+        {{points}}
       </span>
       {{username}}
     </li>

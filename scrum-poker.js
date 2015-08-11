@@ -1,6 +1,6 @@
 Sessions = new Mongo.Collection("sessions");
 Estimates = new Mongo.Collection("estimates");
-Votes = new Mongo.Collection("votes");
+Points = new Mongo.Collection("points");
 Users = new Mongo.Collection("users");
 
 if (Meteor.isClient) {
@@ -66,9 +66,17 @@ if (Meteor.isClient) {
       var asc = 1; // smallest to larges
       return Users.find({session: currentSessionId()}, {sort: {createdAt: asc}});
     },
-    hasVote: function(username) {
+    hasPoint: function(username) {
       var estimateId = Template.parentData(1).id;
-      return Votes.findOne({username: username, estimate: estimateId});
+      return Points.findOne({username: username, estimate: estimateId});
+    },
+    userPoints: function(username) {
+      var estimateId = Template.parentData(1).id;
+      return Points.findOne({username: username, estimate: estimateId}).points;
+    },
+    showPoint: function() {
+      var estimateId = Template.parentData(1).id;
+      return Estimates.findOne({_id: estimateId}).show;
     }
   });
 
@@ -85,20 +93,24 @@ if (Meteor.isClient) {
       localStorage.removeItem('username');
       Session.set("username", null);
     },
-    'click .show-votes': function(event, template) {
-      // TODO(sri): what if two click on show-votes
+    'click .show-points': function(event, template) {
+      // TODO(sri): what if two click on show-points
       // one right after another?
       var current = Estimates.findOne({current: true, session: currentSessionId()});
-      if (!Votes.findOne({estimate: current._id})) {
+      if (!Points.findOne({estimate: current._id})) {
         return false;
       }
-      Estimates.update({_id: current._id}, {$set: {current: false}});
+      Estimates.update({_id: current._id}, {$set: {show: true}});
+      return false;
+    },
+
+    'click .new-session, click .new-session2': function(event, template) {
+      var current = Estimates.findOne({current: true, session: currentSessionId()});
+      if (!Points.findOne({estimate: current._id})) {
+        return false;
+      }
+      Estimates.update({_id: current._id}, {$set: {show: false, current: false}});
       Estimates.insert({current: true, createdAt: (new Date).valueOf(), name: "", session: currentSessionId()});
-      var closedEstimate = $( $(".closed-estimate").get(0) );
-      closedEstimate.find(".list-group-item").css("background-color", "gold");
-      closedEstimate.focus();
-      closedEstimate.find(".list-group-item").addClass("newly-minted");
-      closedEstimate.find(".list-group-item").css("background-color", "#fff");
       return false;
     },
 
@@ -131,11 +143,11 @@ if (Meteor.isClient) {
         alert("err");
         // current = Estimates.insert({current: true, createdAt: (new Date).valueOf()});
       }
-      var currentVote = Votes.findOne({username: username, estimate: current._id});
-      if (currentVote) {
-        Votes.update({_id: currentVote._id}, {$set: {points: points}});
+      var currentPoint = Points.findOne({username: username, estimate: current._id});
+      if (currentPoint) {
+        Points.update({_id: currentPoint._id}, {$set: {points: points}});
       } else {
-        Votes.insert({username: username, estimate: current._id, points: points});
+        Points.insert({username: username, estimate: current._id, points: points});
       }
       // dd-points are points in the dropdown.
       // If they return false, then
@@ -170,8 +182,8 @@ if (Meteor.isClient) {
       var total = 0,
           count = 0;
 
-      Votes.find({estimate: estimateId}).forEach(function(vote) {
-        total += vote.points;
+      Points.find({estimate: estimateId}).forEach(function(point) {
+        total += point.points;
         count += 1;
       });
       if (count === 0) {
@@ -182,12 +194,9 @@ if (Meteor.isClient) {
 
   })
 
-  Template.votes.helpers({
-    votes: function(estimateId) {
-      return Votes.find({estimate: estimateId});
-    },
-    isClosed: function() {
-      return Template.parentData(1).closed === "true";
+  Template.points.helpers({
+    pointsForEstimate: function(estimateId) {
+      return Points.find({estimate: estimateId});
     }
   });
 }
@@ -203,7 +212,7 @@ if (Meteor.isServer) {
       // In console:
       // > Meteor.call("removeAll")
       removeAll: function() {
-        Votes.remove({});
+        Points.remove({});
         Estimates.remove({});
         Sessions.remove({});
         Users.remove({});
