@@ -82,6 +82,9 @@ if (Meteor.isClient) {
   });
 
   Template.estimates.events({
+    'click .info': function(event, template) {
+      $("#about").toggle();
+    },
     'blur input[name=estimatename]': function(event, template) {
       $(".open-estimate").find("form").submit();
     },

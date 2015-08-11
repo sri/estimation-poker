@@ -35,6 +35,14 @@ body {
   float: right;
 }
 
+.info {
+  cursor: pointer;
+}
+
+.about {
+  display: none;
+}
+
 .newly-minted {
   background-color:transparent;
   -moz-transition:background-color 2s;
@@ -50,6 +58,10 @@ body {
 
 .new-session {
   float: right;
+}
+
+.about {
+  margin-top: 20px;
 }
 
 .newly-minted-with-bg-color {
