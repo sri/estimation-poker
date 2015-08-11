@@ -79,46 +79,46 @@ body {
   margin-bottom: 15px;
 }
 
-.ticket {
+.estimate {
   margin-top: 5px;
   padding-left: 5px;
   padding-right: 5px;
   padding-top: 10px;
 }
 
-.ticket-name {
+.estimate-name {
   cursor: text;
 }
 
-.ticket-edit {
+.estimate-edit {
   display: none;
 }
 
-.ticket-name .glyphicon {
+.estimate-name .glyphicon {
   float: right;
 }
 
-.open-ticket {
+.open-estimate {
    position: relative;
 }
 
-.create-ticket {
+.create-estimate {
   float: right;
   cursor: pointer;
 }
 
-.closed-ticket {
+.closed-estimate {
 }
 
-.ticket .list-group-item:first-child {
+.estimate .list-group-item:first-child {
   margin-top: 12px;
 }
 
-.ticket .list-group-item {
+.estimate .list-group-item {
   background: inherit;
 }
 
-.ticket .badge {
+.estimate .badge {
   background: #fff;
   color: #000;
   font-weight: normal;

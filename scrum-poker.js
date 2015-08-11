@@ -1,5 +1,5 @@
 Sprints = new Mongo.Collection("sprints");
-Tickets = new Mongo.Collection("tickets");
+Estimates = new Mongo.Collection("estimates");
 Votes = new Mongo.Collection("votes");
 Users = new Mongo.Collection("users");
 
@@ -27,7 +27,7 @@ if (Meteor.isClient) {
 
   if (window.location.pathname === "/") {
     var sprintId = Sprints.insert({active: true, createdAt: (new Date).valueOf()});
-    var ticketId = Tickets.insert({current: true, createdAt: (new Date).valueOf(), name: "", sprint: sprintId});
+    var estimateId = Estimates.insert({current: true, createdAt: (new Date).valueOf(), name: "", sprint: sprintId});
 
     history.pushState(null, null, "/" + sprintId);
   }
@@ -35,8 +35,8 @@ if (Meteor.isClient) {
   $(document).ready(function() {
     if ($("#username").is(":visible")) {
       $("#username").focus();
-    } else if ($("#ticketname").is(":visible")) {
-      $("#ticketname").focus();
+    } else if ($("#estimatename").is(":visible")) {
+      $("#estimatename").focus();
     }
   });
 
@@ -67,19 +67,19 @@ if (Meteor.isClient) {
       return Users.find({sprint: currentSprintId()}, {sort: {createdAt: asc}});
     },
     hasVote: function(username) {
-      var ticketId = Template.parentData(1).id;
-      return Votes.findOne({username: username, ticket: ticketId});
+      var estimateId = Template.parentData(1).id;
+      return Votes.findOne({username: username, estimate: estimateId});
     }
   });
 
-  Template.tickets.events({
-    'blur input[name=ticketname]': function(event, template) {
-      $(".open-ticket").find("form").submit();
+  Template.estimates.events({
+    'blur input[name=estimatename]': function(event, template) {
+      $(".open-estimate").find("form").submit();
     },
-    'click .ticket-name': function(event, template) {
-      $(".ticket-name").hide();
-      $(".ticket-edit").show();
-      $(".ticket-edit input").focus();
+    'click .estimate-name': function(event, template) {
+      $(".estimate-name").hide();
+      $(".estimate-edit").show();
+      $(".estimate-edit input").focus();
     },
     'click .clear-user': function(event, template) {
       localStorage.removeItem('username');
@@ -88,33 +88,33 @@ if (Meteor.isClient) {
     'click .show-votes': function(event, template) {
       // TODO(sri): what if two click on show-votes
       // one right after another?
-      var current = Tickets.findOne({current: true, sprint: currentSprintId()});
-      if (!Votes.findOne({ticket: current._id})) {
+      var current = Estimates.findOne({current: true, sprint: currentSprintId()});
+      if (!Votes.findOne({estimate: current._id})) {
         return false;
       }
-      Tickets.update({_id: current._id}, {$set: {current: false}});
-      Tickets.insert({current: true, createdAt: (new Date).valueOf(), name: "", sprint: currentSprintId()});
-      var closedTicket = $( $(".closed-ticket").get(0) );
-      closedTicket.find(".list-group-item").css("background-color", "gold");
-      closedTicket.focus();
-      closedTicket.find(".list-group-item").addClass("newly-minted");
-      closedTicket.find(".list-group-item").css("background-color", "#fff");
+      Estimates.update({_id: current._id}, {$set: {current: false}});
+      Estimates.insert({current: true, createdAt: (new Date).valueOf(), name: "", sprint: currentSprintId()});
+      var closedEstimate = $( $(".closed-estimate").get(0) );
+      closedEstimate.find(".list-group-item").css("background-color", "gold");
+      closedEstimate.focus();
+      closedEstimate.find(".list-group-item").addClass("newly-minted");
+      closedEstimate.find(".list-group-item").css("background-color", "#fff");
       return false;
     },
 
     'submit form': function(event, template) {
-      $(".ticket-edit").hide();
-      $(".ticket-name").show();
+      $(".estimate-edit").hide();
+      $(".estimate-name").show();
 
-      var name = $.trim(event.target.ticketname.value).toUpperCase();
+      var name = $.trim(event.target.estimatename.value).toUpperCase();
       if (!name) {
         return false;
       }
-      event.target.ticketname.value = "";
+      event.target.estimatename.value = "";
 
-      var current = Tickets.findOne({current: true, sprint: currentSprintId()});
+      var current = Estimates.findOne({current: true, sprint: currentSprintId()});
       if (current) {
-        Tickets.update({_id: current._id}, {$set: {name: name}});
+        Estimates.update({_id: current._id}, {$set: {name: name}});
       }
       return false;
     },
@@ -126,16 +126,16 @@ if (Meteor.isClient) {
         return;
       }
       var points = event.target.innerHTML;
-      var current = Tickets.findOne({current: true, sprint: currentSprintId()});
+      var current = Estimates.findOne({current: true, sprint: currentSprintId()});
       if (!current) {
         alert("err");
-        // current = Tickets.insert({current: true, createdAt: (new Date).valueOf()});
+        // current = Estimates.insert({current: true, createdAt: (new Date).valueOf()});
       }
-      var currentVote = Votes.findOne({username: username, ticket: current._id});
+      var currentVote = Votes.findOne({username: username, estimate: current._id});
       if (currentVote) {
         Votes.update({_id: currentVote._id}, {$set: {points: points}});
       } else {
-        Votes.insert({username: username, ticket: current._id, points: points});
+        Votes.insert({username: username, estimate: current._id, points: points});
       }
       // dd-points are points in the dropdown.
       // If they return false, then
@@ -147,7 +147,7 @@ if (Meteor.isClient) {
     }
   });
 
-  Template.tickets.helpers({
+  Template.estimates.helpers({
     user: function() {
       return Session.get("username");
     },
@@ -155,22 +155,22 @@ if (Meteor.isClient) {
       if (!name) return false;
       return true;
     },
-    openTicket: function() {
-      return Tickets.findOne({current: true, sprint: currentSprintId()});
+    openEstimate: function() {
+      return Estimates.findOne({current: true, sprint: currentSprintId()});
       // if (current) {
       //   return current;
       // }
-      // Tickets.insert({current: true, createdAt: (new Date).valueOf(), name: ""});
-      // return Tickets.findOne({current: true});
+      // Estimates.insert({current: true, createdAt: (new Date).valueOf(), name: ""});
+      // return Estimates.findOne({current: true});
     },
-    closedTickets: function() {
-      return Tickets.find({current: false, sprint: currentSprintId()}, {sort: {createdAt: -1}});
+    closedEstimates: function() {
+      return Estimates.find({current: false, sprint: currentSprintId()}, {sort: {createdAt: -1}});
     },
-    consensus: function(ticketId) {
+    consensus: function(estimateId) {
       var total = 0,
           count = 0;
 
-      Votes.find({ticket: ticketId}).forEach(function(vote) {
+      Votes.find({estimate: estimateId}).forEach(function(vote) {
         total += vote.points;
         count += 1;
       });
@@ -183,8 +183,8 @@ if (Meteor.isClient) {
   })
 
   Template.votes.helpers({
-    votes: function(ticketId) {
-      return Votes.find({ticket: ticketId});
+    votes: function(estimateId) {
+      return Votes.find({estimate: estimateId});
     },
     isClosed: function() {
       return Template.parentData(1).closed === "true";
@@ -204,7 +204,7 @@ if (Meteor.isServer) {
       // > Meteor.call("removeAll")
       removeAll: function() {
         Votes.remove({});
-        Tickets.remove({});
+        Estimates.remove({});
         Sprints.remove({});
         Users.remove({});
       }
