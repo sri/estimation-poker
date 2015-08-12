@@ -1,0 +1,10 @@
+<template name="points">
+  {{#each pointsForEstimate id}}
+    <li class="list-group-item">
+      <span class="badge">
+        <span class="points-text">{{points}}</span>
+      </span>
+      {{username}}
+    </li>
+  {{/each}}
+</template>
