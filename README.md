@@ -1,5 +1,5 @@
-EstimationPoker
-===============
+Estimation Poker
+================
 
 Estimate tickets/tasks/epics with your team.
 
