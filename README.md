@@ -17,7 +17,7 @@ Features
 Bugs
 ----
 - Same names overwrite each other
-- Doesn't exit user when the close the browser
+- Doesn't remove the user when they close the browser and exit the session
 - remove inscure
 - remove autopublish
 - loading.... sign when templates aren't ready yet
