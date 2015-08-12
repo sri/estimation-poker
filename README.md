@@ -28,8 +28,20 @@ Bugs
 Screenshots
 -----------
 
+### Initial Screen:
+
 ![Inital Screen](https://raw.githubusercontent.com/sri/estimation-poker/master/screenshots/initial.png?raw=true "Initial Screen")
 
-![Voting Screen](https://raw.githubusercontent.com/sri/estimation-poker/master/screenshots/voting.png?raw=true "Voting Screen")
+---
+
+### Voting:
+
+![Voting](https://raw.githubusercontent.com/sri/estimation-poker/master/screenshots/voting.png?raw=true "Voting")
+
+---
+
+### Mobile UI:
 
 ![Mobile UI](https://raw.githubusercontent.com/sri/estimation-poker/master/screenshots/mobile.png?raw=true "Mobile UI")
+
+---
