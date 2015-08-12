@@ -144,8 +144,8 @@ if (Meteor.isClient) {
       var points = event.target.innerHTML;
       var current = Estimates.findOne({current: true, session: currentSessionId()});
       if (!current) {
-        alert("err");
-        // current = Estimates.insert({current: true, createdAt: (new Date).valueOf()});
+          alert("err");
+          return false;
       }
       var currentPoint = Points.findOne({username: username, estimate: current._id});
       if (currentPoint) {
@@ -181,30 +181,11 @@ if (Meteor.isClient) {
     },
     openEstimate: function() {
       return Estimates.findOne({current: true, session: currentSessionId()});
-      // if (current) {
-      //   return current;
-      // }
-      // Estimates.insert({current: true, createdAt: (new Date).valueOf(), name: ""});
-      // return Estimates.findOne({current: true});
     },
     closedEstimates: function() {
       return Estimates.find({current: false, session: currentSessionId()}, {sort: {createdAt: -1}});
-    },
-    consensus: function(estimateId) {
-      var total = 0,
-          count = 0;
-
-      Points.find({estimate: estimateId}).forEach(function(point) {
-        total += point.points;
-        count += 1;
-      });
-      if (count === 0) {
-        return 0;
-      }
-      return Math.ceil(total / count);
     }
-
-  })
+  });
 
   Template.points.helpers({
     pointsForEstimate: function(estimateId) {
