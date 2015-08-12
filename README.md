@@ -24,3 +24,12 @@ Bugs
 - doesn't work on iphone safari. why?
 - auto avg
 - no tests
+
+Screenshots
+-----------
+
+![Inital Screen](https://raw.githubusercontent.com/sri/estimation-poker/master/screenshots/initial.png?raw=true "Initial Screen")
+
+![Voting Screen](https://raw.githubusercontent.com/sri/estimation-poker/master/screenshots/voting.png?raw=true "Voting Screen")
+
+![Mobile UI](https://raw.githubusercontent.com/sri/estimation-poker/master/screenshots/mobile.png?raw=true "Mobile UI")
