@@ -106,16 +106,16 @@ body {
   padding-top: 10px;
 }
 
+#share-link {
+  width: 300px;
+}
+
 .estimate-name {
   cursor: text;
 }
 
 .estimate-edit {
   display: none;
-}
-
-.estimate-name .glyphicon {
-  float: right;
 }
 
 .open-estimate {

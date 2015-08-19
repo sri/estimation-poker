@@ -31,4 +31,12 @@ Meteor.startup(function () {
   } else if ($("#estimatename").is(":visible")) {
     $("#estimatename").focus();
   }
+
+  $("#share-btn").on("shown.bs.dropdown", function() {
+    var shareLink = document.getElementById('share-link');
+    shareLink.value = window.location;
+    shareLink.focus();
+    shareLink.select();
+  });
+
 });

@@ -1,4 +1,7 @@
 Template.estimates.events({
+  'click #share-link-a': function(event, template) {
+    return false;
+  },
   'click .info': function(event, template) {
     $("#about").toggle();
   },
