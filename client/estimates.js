@@ -14,6 +14,8 @@ Template.estimates.events({
     $(".estimate-edit input").focus();
   },
   'click .clear-user': function(event, template) {
+    var user = Users.findOne({session: currentSessionId(), username: Session.get('username')});
+    Users.remove(user._id);
     localStorage.removeItem('username');
     Session.set("username", null);
   },
