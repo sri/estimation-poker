@@ -41,6 +41,11 @@ Template.estimates.events({
   },
 
   'submit form': function(event, template) {
+    if (!Session.get("username")) {
+      alert("Please set username");
+      return;
+    }
+
     $(".estimate-edit").hide();
     $(".estimate-name").show();
 
