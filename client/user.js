@@ -11,7 +11,6 @@ Template.user.events({
     if (!username) {
       return false;
     }
-    username = username.charAt(0).toUpperCase() + username.slice(1).toLowerCase();
     Session.set("username", username);
     localStorage["username"] = username;
     Users.insert({username: username, session: currentSessionId(), joinedAt: (new Date).valueOf()});
