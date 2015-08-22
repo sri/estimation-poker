@@ -32,11 +32,11 @@ Meteor.startup(function () {
     $("#estimatename").focus();
   }
 
-  $("#share-btn").on("shown.bs.dropdown", function() {
-    var shareLink = document.getElementById('share-link');
-    shareLink.value = window.location;
-    shareLink.focus();
-    shareLink.select();
+  $("#invite-btn").on("shown.bs.dropdown", function() {
+    var inviteLink = document.getElementById('invite-link');
+    inviteLink.value = window.location;
+    inviteLink.focus();
+    inviteLink.select();
   });
 
 });

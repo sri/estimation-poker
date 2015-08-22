@@ -1,5 +1,5 @@
 Template.estimates.events({
-  'click #share-link-a': function(event, template) {
+  'click #invite-link-a': function(event, template) {
     return false;
   },
   'click .info': function(event, template) {
