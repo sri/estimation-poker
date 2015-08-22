@@ -30,8 +30,7 @@ body {
   margin: 20px 0;
 }
 
-.clear-user {
-  cursor: pointer;
+.clear-user-div {
   float: right;
 }
 

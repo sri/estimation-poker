@@ -16,10 +16,19 @@
           </ul>
         </div>
         {{#if user}}
-          <span class="label label-primary clear-user" title="Click to clear this username">
-            <span class="glyphicon glyphicon-user"></span>
-            {{user}}
-          </span>
+          <div class="btn-group clear-user-div">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+              <span class="glyphicon glyphicon-user"></span> {{user}}
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="#" class="clear-user">
+                  Leave Session
+                </a>
+              </li>
+            </ul>
+          </div>
         {{/if}}
       </h3>
     </div>
