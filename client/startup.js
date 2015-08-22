@@ -59,9 +59,10 @@ Meteor.startup(function () {
     inviteLink.select();
   });
 
-  $("#about-btn").click(function(event) {
+  $(".about-btn").click(function(event) {
     event.preventDefault();
     $("#about").toggle();
+    return false;
   });
 
 });
