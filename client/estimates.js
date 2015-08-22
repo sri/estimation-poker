@@ -2,9 +2,6 @@ Template.estimates.events({
   'click #invite-link-a': function(event, template) {
     return false;
   },
-  'click .info': function(event, template) {
-    $("#about").toggle();
-  },
   'blur input[name=estimatename]': function(event, template) {
     $(".open-estimate").find("form").submit();
   },
