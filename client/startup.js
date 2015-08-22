@@ -32,6 +32,26 @@ Meteor.startup(function () {
     $("#estimatename").focus();
   }
 
+  var keys = {
+    49: "1",              // Ctrl-1
+    50: "2",              // Ctrl-2
+    51: "3",              // Ctrl-3
+    53: "5",              // Ctrl-5
+    56: "8",              // Ctrl-8
+    20: "13",             // Ctrl-t
+    9: "∞",               // Ctrl-i
+    2: "Back to Product", // Ctrl-b
+  };
+
+  $(document).keypress(function(event) {
+    if (event.ctrlKey) {
+      var points = keys[event.which];
+      if (points) {
+        castVote(points);
+      }
+    }
+  });
+
   $("#invite-btn").on("shown.bs.dropdown", function() {
     var inviteLink = document.getElementById('invite-link');
     inviteLink.value = window.location;
