@@ -1,19 +1,41 @@
 Template.user.helpers({
-  user: function() {
-    return Session.get("username");
+  hasUserName: function() {
+    return Session.get("userName");
   }
 });
 
 Template.user.events({
   'submit form': function(event, template) {
     event.preventDefault();
-    var username = $.trim(event.target.username.value);
-    if (!username) {
+
+    var userName = $.trim(event.target.username.value);
+    if (!userName) {
       return false;
     }
-    Session.set("username", username);
-    localStorage["username"] = username;
-    Users.insert({username: username, session: currentSessionId(), joinedAt: (new Date).valueOf()});
+
+    var userId = Users.insert({
+      userName: userName,
+      sessionId: currentSessionId(),
+      joinedAt: currentTimestamp()});
+    if (!userId) {
+      alert("Error creating user -- try again.")
+      return;
+    }
+
+    setGlobals("userName", userName);
+    setGlobals("userId", userId);
+
+    Meteor.call("setUserId", userId);
+    var userSession = UserSessions.insert({
+      userName: userName,
+      userId: userId,
+      sessionId: currentSessionId()
+    });
+    if (!userSession) {
+      alert("Unable to join session -- reload page to try again");
+      return;
+    }
+
     $(".page-header").hide();
     return false;
   }

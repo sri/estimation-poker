@@ -1,15 +1,25 @@
 Template.users.helpers({
   connectedUsers: function() {
     var asc = 1;
-    return Users.find({session: currentSessionId()}, {sort: {username: asc}});
+    return UserSessions.find(
+      {sessionId: currentSessionId()},
+      {sort: {userName: asc}});
   },
-  hasPoint: function(username) {
+  hasPoint: function(userId) {
     var estimateId = Template.parentData(1).id;
-    return Points.findOne({username: username, estimate: estimateId});
+    return Points.findOne({
+      userId: userId,
+      estimateId: estimateId});
   },
-  userPoints: function(username) {
+  userPoints: function(userId) {
     var estimateId = Template.parentData(1).id;
-    return Points.findOne({username: username, estimate: estimateId}).points;
+    var point = Points.findOne({
+      userId: userId,
+      estimateId: estimateId});
+    if (!point) {
+      return null;
+    }
+    return point.points;
   },
   showPoint: function() {
     var estimateId = Template.parentData(1).id;

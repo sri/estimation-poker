@@ -10,16 +10,16 @@
     <li class="list-group-item">
       <span class="badge">
         {{#if showPoint}}
-          <span class="points-text">{{userPoints username}}</span>
+          <span class="points-text">{{userPoints userId}}</span>
         {{else}}
-          {{#if hasPoint username}}
+          {{#if hasPoint userId}}
             <span class="glyphicon glyphicon-question-sign glyph-big"></span>
           {{else}}
             <span class="glyphicon glyphicon-minus glyph-big"></span>
           {{/if}}
         {{/if}}
       </span>
-      {{username}}
+      {{userName}}
     </li>
   {{/each}}
 </template>

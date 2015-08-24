@@ -12,38 +12,57 @@ Template.estimates.events({
   },
   'click .clear-user': function(event, template) {
     event.preventDefault();
-    var user = Users.findOne({session: currentSessionId(), username: Session.get('username')});
-    Users.remove(user._id);
-    localStorage.removeItem('username');
-    Session.set("username", null);
+
+    var userId = Session.get("userId");
+    var userSession = UserSessions.findOne({
+      sessionId: currentSessionId(),
+      userId: userId});
+
+    Meteor.call("setUserId", userId);
+    UserSessions.remove(userSession._id);
+    Users.remove(userId);
+
+    setGlobals("userName", null);
+    setGlobals("userId", null);
   },
   'click .show-points': function(event, template) {
     // TODO(sri): what if two click on show-points
     // one right after another?
-    var current = Estimates.findOne({current: true, session: currentSessionId()});
-    if (!Points.findOne({estimate: current._id})) {
+    var current = Estimates.findOne({current: true,
+                                     sessionId: currentSessionId()});
+    if (!Points.findOne({estimateId: current._id})) {
+      // No one has voted.
       return false;
     }
-    Estimates.update({_id: current._id}, {$set: {show: true}});
+    Estimates.update({_id: current._id},
+                     {$set: {show: true}});
     return false;
   },
 
+  // TODO(sri): change these to new-estimate
   'click .new-session, click .new-session2': function(event, template) {
-    var current = Estimates.findOne({current: true, session: currentSessionId()});
-    if (!Points.findOne({estimate: current._id})) {
-      return false;
+    var current = Estimates.findOne({current: true,
+                                     sessionId: currentSessionId()});
+    if (!current) {
+      return;
     }
-    Estimates.update({_id: current._id}, {$set: {show: false, current: false}});
-    Estimates.insert({current: true, createdAt: (new Date).valueOf(), name: "", session: currentSessionId()});
-    return false;
+    if (!Points.findOne({estimateId: current._id})) {
+      return;
+    }
+    Estimates.update(
+      {_id: current._id},
+      {$set: {show: false,
+              current: false}});
+
+    Meteor.call("setUserId", Session.get("userId"));
+    Estimates.insert({
+      current: true,
+      createdAt: currentTimestamp(),
+      name: "",
+      sessionId: currentSessionId()});
   },
 
   'submit form': function(event, template) {
-    if (!Session.get("username")) {
-      alert("Please set username");
-      return false;
-    }
-
     $(".estimate-edit").hide();
     $(".estimate-name").show();
 
@@ -53,8 +72,16 @@ Template.estimates.events({
     }
     event.target.estimatename.value = "";
 
-    var current = Estimates.findOne({current: true, session: currentSessionId()});
+    if (!Session.get("userName")) {
+      alert("Please set username");
+      return;
+    }
+
+    var current = Estimates.findOne({
+      current: true,
+      sessionId: currentSessionId()});
     if (current) {
+      Meteor.call("setUserId", Session.get("userId"));
       Estimates.update({_id: current._id}, {$set: {name: name}});
     }
     return false;
@@ -75,17 +102,22 @@ Template.estimates.events({
 });
 
 Template.estimates.helpers({
-  user: function() {
-    return Session.get("username");
+  userName: function() {
+    return Session.get("userName");
   },
   hasName: function(name) {
     if (!name) return false;
     return true;
   },
   openEstimate: function() {
-    return Estimates.findOne({current: true, session: currentSessionId()});
+    return Estimates.findOne({
+      current: true,
+      sessionId: currentSessionId()});
   },
   closedEstimates: function() {
-    return Estimates.find({current: false, session: currentSessionId()}, {sort: {createdAt: -1}});
+    return Estimates.find({
+      current: false,
+      sessionId: currentSessionId()},
+      {sort: {createdAt: -1}});
   }
 });

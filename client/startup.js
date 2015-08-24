@@ -1,27 +1,37 @@
-currentSessionId = function() {
-  return window.location.pathname.substring(1);
-};
-
-if (localStorage["username"]) {
-  Session.set("username", localStorage["username"]);
+if (localStorage["userName"] && localStorage["userId"]) {
+  Session.set("userName", localStorage["userName"]);
+  Session.set("userId", localStorage["userId"]);
+} else {
+  setGlobals("userName", null);
+  setGlobals("userId", null);
 }
 
 if (window.location.pathname === "/") {
-  var sessionId = Sessions.insert({active: true, createdAt: (new Date).valueOf()});
-  var estimateId = Estimates.insert({current: true, createdAt: (new Date).valueOf(), name: "", session: sessionId});
+  // If they land on the domain without a session,
+  // create a new one for them. Also, create a current
+  // Estimate for it.
+  var sessionId = Sessions.insert({createdAt: currentTimestamp()});
+  var estimateId = Estimates.insert({current: true,
+                                     createdAt: currentTimestamp(),
+                                     name: "",
+                                     sessionId: sessionId});
 
+  // TODO(sri): doesn't seem to work with Safari on iOS.
   history.pushState(null, null, "/" + sessionId);
 }
 
 Meteor.startup(function () {
 
   Meteor.subscribe("users", function() {
-    var username = Session.get("username");
-    if (username) {
-      var userSelector = {username: username, session: currentSessionId()};
-      if (!Users.findOne(userSelector)) {
-        var insertSelector = _.extend({}, userSelector, {joinedAt: (new Date).valueOf()});
-        Users.insert(insertSelector);
+    var userId = Session.get("userId");
+    var userName = Session.get("userName");
+
+    if (userId && userName) {
+      var sel = {
+        userId: userId,
+        sessionId: currentSessionId()};
+      if (!UserSessions.findOne(sel)) {
+        UserSessions.insert(_.extend({}, sel, {userName: userName}));
       }
     }
   });
@@ -32,15 +42,17 @@ Meteor.startup(function () {
     $("#estimatename").focus();
   }
 
+  // Key bindings:
+  // TODO(sri): Add for Show Points and Another Estimate.
   var keys = {
-    49: "1",              // Ctrl-1
-    50: "2",              // Ctrl-2
-    51: "3",              // Ctrl-3
-    53: "5",              // Ctrl-5
-    56: "8",              // Ctrl-8
-    20: "13",             // Ctrl-t
-    9: "∞",               // Ctrl-i
-    2: "Back to Product", // Ctrl-b
+    49: "1",               // Ctrl-1
+    50: "2",               // Ctrl-2
+    51: "3",               // Ctrl-3
+    53: "5",               // Ctrl-5
+    56: "8",               // Ctrl-8
+    20: "13",              // Ctrl-t
+    9:  "∞",               // Ctrl-i
+    2:  "Back to Product", // Ctrl-b
   };
 
   $(document).keypress(function(event) {
@@ -52,6 +64,8 @@ Meteor.startup(function () {
     }
   });
 
+  // When Invite button is clicked, focus & select the URL
+  // to share, so that they can easily cut/copy it.
   $("#invite-btn").on("shown.bs.dropdown", function() {
     var inviteLink = document.getElementById('invite-link');
     inviteLink.value = window.location;
