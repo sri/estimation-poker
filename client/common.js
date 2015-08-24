@@ -46,8 +46,8 @@ castVote = function(points) {
       points: points});
   }
 
-  var nPoints = Points.find({estimate: current._id}).count();
-  var nUsers = Users.find({session: currentSessionId()}).count();
+  var nPoints = Points.find({estimateId: current._id}).count();
+  var nUsers = UserSessions.find({sessionId: currentSessionId()}).count();
 
   if (nPoints === nUsers) {
     Estimates.update({_id: current._id}, {$set: {show: true}});
