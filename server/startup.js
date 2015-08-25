@@ -1,7 +1,7 @@
 Meteor.startup(function () {
 
-  Meteor.publish("users", function() {
-    return Users.find({});
+  Meteor.publish("usersessions", function() {
+    return UserSessions.find({});
   });
 
   Meteor.methods({

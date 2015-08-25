@@ -22,10 +22,13 @@ if (window.location.pathname === "/") {
 
 Meteor.startup(function () {
 
-  Meteor.subscribe("users", function() {
+  Meteor.subscribe("usersessions", function() {
     var userId = Session.get("userId");
     var userName = Session.get("userName");
 
+    // If the user already has a name & id
+    // automatically create a user session for
+    // them.
     if (userId && userName) {
       var sel = {
         userId: userId,
