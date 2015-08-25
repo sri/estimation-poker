@@ -47,10 +47,6 @@ Meteor.startup(function () {
       if (totalOpenEstimates > 0) {
         return false;
       }
-      // TODO(sri): ensure that only one estimate
-      // can be current in this Session. That should
-      // handle two people clicking on the 'Another Estimate'
-      // button at approx. the same time.
       if (!userId) {
         return false;
       }
@@ -110,11 +106,8 @@ Meteor.startup(function () {
 
   UserSessions.allow({
     insert: function(userId, userSession) {
-      // TODO(sri): FIXME
-      return true;
-
-      // return !UserSessions.findOne({userId: userId,
-      //                               sessionId: userSession.sessionId});
+      return !UserSessions.findOne({userId: userId,
+                                    sessionId: userSession.sessionId});
     },
     remove: function(userId, user) {
       return userId === user.userId;
