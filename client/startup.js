@@ -76,15 +76,16 @@ Meteor.startup(function () {
     inviteLink.select();
   });
 
+  $(".about-close").click(function(event) {
+    event.preventDefault();
+    $("#about").hide();
+    return false;
+  });
+
   $(".about-btn").click(function(event) {
     event.preventDefault();
-
-    var aboutDiv = $("#about");
-    aboutDiv.toggle();
-    if (aboutDiv.is(":visible")) {
-      window.scroll(0, 0);
-    }
-
+    $("#about").show();
+    window.scroll(0, 0);
     return false;
   });
 
