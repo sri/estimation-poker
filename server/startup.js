@@ -97,6 +97,7 @@ Meteor.startup(function () {
     update: function(userId, user, fields) {
       return (userId === user._id &&
               fields.length === 1 &&
+              // TODO(sri): userName?
               fields[0] === "username");
     },
     remove: function(userId, user) {
