@@ -39,8 +39,7 @@ Template.estimates.events({
     return false;
   },
 
-  // TODO(sri): change these to new-estimate
-  'click .new-session, click .new-session2': function(event, template) {
+  'click .new-estimate, click .new-estimate2': function(event, template) {
     var current = Estimates.findOne({current: true,
                                      sessionId: currentSessionId()});
     if (!current) {
