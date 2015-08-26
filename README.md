@@ -17,10 +17,9 @@ Features
 Bugs
 ----
 - Doesn't remove the user when they close the browser and exit the session
-- remove autopublish
 - loading.... sign when templates aren't ready yet
-- doesn't work on iphone safari. why?
-- auto avg
+- pushState doesn't work on iphone safari.
+- auto avg?
 - no tests
 
 Screenshots
