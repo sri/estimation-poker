@@ -1,7 +1,18 @@
 Meteor.startup(function () {
 
-  Meteor.publish("usersessions", function() {
-    return UserSessions.find({});
+  Meteor.publish("usersessions", function(sessionId) {
+    check(sessionId, String);
+    return UserSessions.find({sessionId: sessionId});
+  });
+
+  Meteor.publish("estimates", function(sessionId) {
+    check(sessionId, String);
+    return Estimates.find({sessionId: sessionId});
+  });
+
+  Meteor.publish("points", function(sessionId) {
+    check(sessionId, String);
+    return Points.find({sessionId: sessionId});
   });
 
   Meteor.methods({

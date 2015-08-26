@@ -22,7 +22,7 @@ if (window.location.pathname === "/") {
 
 Meteor.startup(function () {
 
-  Meteor.subscribe("usersessions", function() {
+  Meteor.subscribe("usersessions", currentSessionId(), function() {
     var userId = Session.get("userId");
     var userName = Session.get("userName");
 
@@ -38,6 +38,9 @@ Meteor.startup(function () {
       }
     }
   });
+
+  Meteor.subscribe("estimates", currentSessionId());
+  Meteor.subscribe("points", currentSessionId());
 
   if ($("#username").is(":visible")) {
     $("#username").focus();

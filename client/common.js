@@ -42,6 +42,7 @@ castVote = function(points) {
     Points.insert({
       userName: userName,
       userId: userId,
+      sessionId: currentSessionId(),
       estimateId: current._id,
       points: points});
   }
