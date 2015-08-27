@@ -15,6 +15,50 @@ Meteor.startup(function () {
     return Points.find({sessionId: sessionId});
   });
 
+  var publishCounts = function(params) {
+    Meteor.publish(params.pubName, function() {
+      var self = this;
+      var init = true;
+      var count = 0;
+
+      var handle = params.collection.find().observeChanges({
+        added: function(id) {
+          count++;
+          if (!init) {
+            self.changed("counts", params.docId, {count: count});
+          }
+        }
+      });
+
+      init = false;
+      self.added("counts", params.docId, {count: count});
+      self.ready();
+
+      self.onStop(function() {
+        handle.stop();
+      });
+
+    });
+  };
+
+  publishCounts({
+    pubName: "total-sessions",
+    collection: Sessions,
+    docId: "sessions"
+  });
+
+  publishCounts({
+    pubName: "total-estimates",
+    collection: Estimates,
+    docId: "estimates"
+  });
+
+  publishCounts({
+    pubName: "total-votes",
+    collection: Points,
+    docId: "votes"
+  });
+
   Meteor.methods({
     setUserId: function(userId) {
       this.setUserId(userId);

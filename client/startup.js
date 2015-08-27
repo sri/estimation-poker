@@ -42,10 +42,19 @@ Meteor.startup(function () {
   Meteor.subscribe("estimates", currentSessionId());
   Meteor.subscribe("points", currentSessionId());
 
-  if ($("#username").is(":visible")) {
-    $("#username").focus();
-  } else if ($("#estimatename").is(":visible")) {
-    $("#estimatename").focus();
+  Tracker.autorun(function() {
+    Meteor.subscribe("total-sessions");
+    Meteor.subscribe("total-estimates");
+    Meteor.subscribe("total-votes");
+  });
+
+  var username = $("#username");
+  var estimateName = $("#estimatename");
+
+  if (username.is(":visible")) {
+    username.focus();
+  } else if (estimateName.is(":visible")) {
+    estimateName.focus();
   }
 
   // Key bindings:
