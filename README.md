@@ -3,7 +3,7 @@ Estimation Poker
 
 Estimate tickets/tasks/epics with your team.
 
-[Try it now!](http://estimation-poker.meteor.com)
+[Try it now!](http://estimation-poker.meteorapp.com)
 
 Features
 --------
