@@ -98,6 +98,16 @@ Meteor.startup(function () {
       return (point.userId === userId &&
               fields.length === 1 &&
               fields[0] === "points");
+    },
+    remove: function(userId, point) {
+      var userSession = UserSessions.findOne({userId: userId});
+      if (!userSession) return false;
+      if (userSession.sessionId === point.sessionId) {
+        Estimates.update({_id: point.estimateId}, {$set: {show: false}});
+        return true;
+      } else {
+        return false;
+      }
     }
   });
 

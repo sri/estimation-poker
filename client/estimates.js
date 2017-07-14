@@ -39,6 +39,21 @@ Template.estimates.events({
     return false;
   },
 
+  'click .clear-points': function(event, template) {
+    // TODO(sri): what if two click on show-points
+    // one right after another?
+    var current = Estimates.findOne({current: true,
+                                     sessionId: currentSessionId()});
+    if (!Points.findOne({estimateId: current._id})) {
+      // No one has voted.
+      return false;
+    }
+    Points.find({estimateId: current._id}).forEach(function(point) {
+      Points.remove(point._id);
+    });
+    return false;
+  },
+
   'click .new-estimate, click .new-estimate2': function(event, template) {
     var current = Estimates.findOne({current: true,
                                      sessionId: currentSessionId()});
