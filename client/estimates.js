@@ -40,8 +40,6 @@ Template.estimates.events({
   },
 
   'click .clear-points': function(event, template) {
-    // TODO(sri): what if two click on show-points
-    // one right after another?
     var current = Estimates.findOne({current: true,
                                      sessionId: currentSessionId()});
     if (!Points.findOne({estimateId: current._id})) {
